@@ -1,6 +1,6 @@
 ﻿namespace turizm
 {
-    partial class Form1
+    partial class FormMain
     {
         /// <summary>
         /// Обязательная переменная конструктора.
@@ -33,12 +33,13 @@
             // 
             // buttonUpdateDB
             // 
-            this.buttonUpdateDB.Location = new System.Drawing.Point(227, 12);
+            this.buttonUpdateDB.Location = new System.Drawing.Point(248, 12);
             this.buttonUpdateDB.Name = "buttonUpdateDB";
             this.buttonUpdateDB.Size = new System.Drawing.Size(91, 23);
             this.buttonUpdateDB.TabIndex = 0;
             this.buttonUpdateDB.Text = "Обновить БД";
             this.buttonUpdateDB.UseVisualStyleBackColor = true;
+            this.buttonUpdateDB.Click += new System.EventHandler(this.buttonUpdateDB_Click);
             // 
             // Form1
             // 
