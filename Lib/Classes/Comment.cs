@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace turizm.Lib.Classes
 {
-    public class Comment
+    public class Comment: IComparable
     {
 
         public long TopicID { get; set; }
@@ -18,6 +18,14 @@ namespace turizm.Lib.Classes
         public DateTime Date { get; set; }
 
         public long Likes { get; set; }
-           
+
+        public long CommentID { get;  set; }
+
+        public int CompareTo(object obj)
+        {
+            if (!(obj is Comment))
+                throw new InvalidCastException("Тип должен быть Comment");
+            return Date.CompareTo((obj as Comment).Date);
+        }
     }
 }

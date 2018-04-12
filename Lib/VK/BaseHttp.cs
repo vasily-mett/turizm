@@ -48,9 +48,11 @@ namespace turizm.Lib.VK
             catch (WebException we) { throw new WebException("Ошибка подключения.\r\n" + url, we); }
         }
 
-        protected JObject GetJson(string url)
+        protected JToken GetJson(string url)
         {
-            return new JObject(GetString(url));
+
+            string json = GetString(url);
+            return  JToken.Parse(json);
         }
     }
 }

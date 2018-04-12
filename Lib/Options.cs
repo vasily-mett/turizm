@@ -28,14 +28,29 @@ namespace turizm.Lib
             };
         }
 
-
+        /// <summary>
+        /// ID приложения вконтакте
+        /// </summary>
         public ulong ApplicationID { get; set; }
 
+        /// <summary>
+        /// access token, полученный через браузер или через VKNet
+        /// </summary>
         public string AccessToken { get; set; }
 
+        /// <summary>
+        /// список ссылок на обсуждения, которые будут просматриваться при обработке
+        /// </summary>
         public List<string> Topics { get; set; }
 
+        /// <summary>
+        /// имя файла базы данных
+        /// </summary>
         private string databaseFileName;
+
+        /// <summary>
+        /// имя файла базы данных
+        /// </summary>
         public string DatabaseFileName { get { return Application.StartupPath + "\\" + databaseFileName; } set { databaseFileName = Path.GetFileName(value); } }
     }
 }
