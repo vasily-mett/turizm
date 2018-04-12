@@ -58,8 +58,11 @@ namespace turizm.Lib.VK
             foreach (Topic t in topics)
             {
                 Comment last_comm = database.GetLastComment(t);
+                DateTime start = DateTime.Now;
                 List<Comment> new_comments = GetCommentsFrom(t, last_comm);
-                database.AddComments(new_comments);
+                TimeSpan get = DateTime.Now - start;
+                database.AddComments(new_comments, (str)=> { });
+                TimeSpan write = DateTime.Now - start - get;
             }
         }
 
@@ -78,7 +81,7 @@ namespace turizm.Lib.VK
             if (last_comm == null)
                 start_comment_id = "";
             else
-                start_comment_id = "&start_comment_id="+last_comm.CommentID.ToString();
+                start_comment_id = "&start_comment_id=" + last_comm.CommentID.ToString();
 
             List<Comment> res = new List<Comment>();
 
@@ -98,8 +101,20 @@ namespace turizm.Lib.VK
                 string text = item["text"].ToString();
                 long likes = long.Parse(item["likes"]["count"].ToString());
                 DateTime parsed_date = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc).AddSeconds(date);
-                res.Add(new Comment() { CommentID=comment_id,Likes=likes,Text=text,TopicID=t.TopicID,UserID=from_id,Date=parsed_date });
+                res.Add(new Comment() { CommentID = comment_id, Likes = likes, Text = text, TopicID = t.TopicID, UserID = from_id, Date = parsed_date });
             }
+
+            int total = int.Parse(json["response"]["count"].ToString());
+
+            //сдвиг на сколько комментариев уже передвинулись в этом обсуждении
+            int offset = 0;
+            if (json["response"]["real_offset"] == null)
+                offset = 0;
+            else
+                offset = int.Parse(json["response"]["real_offset"].ToString());
+
+            if (total - offset > res.Count)
+                res.AddRange(GetCommentsFrom(t, res[res.Count - 1]));
 
             //если был задан стартовый элемент, то надо удалить, а то он два раз добавляется
             //да, ненаучно, но что делать)

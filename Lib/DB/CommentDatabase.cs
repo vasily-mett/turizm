@@ -89,10 +89,9 @@ namespace turizm.Lib.DB
         /// добавляет комментарии в базу данных
         /// </summary>
         /// <param name="new_comments"></param>
-        internal void AddComments(List<Comment> new_comments)
+        internal void AddComments(List<Comment> new_comments, Action<string> callback)
         {
-            foreach (Comment comm in new_comments)
-                Add(comm);
+            this.Add(new_comments,callback);
         }
 
         /// <summary>

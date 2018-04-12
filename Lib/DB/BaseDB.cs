@@ -72,9 +72,9 @@ namespace turizm.Lib.DB
             commCreate.ExecuteNonQuery();
 
             commCreate.CommandText = @"CREATE TABLE " + tb_comments + @" 
-                (comment_id INTEGER PRIMARY KEY NOT NULL,
-                user_id INTEGER,
-                topic_id INTEGER,
+                (comment_id INTEGER NOT NULL,
+                user_id INTEGER NOT NULL,
+                topic_id INTEGER NOT NULL,
                 comment_text TEXT,
                 comment_date INTEGER,
                 comment_likes INTEGER);";
@@ -97,6 +97,7 @@ namespace turizm.Lib.DB
             {
                 //добавление комментария в таблицу
                 Comment comment = obj as Comment;
+                comment.Text = comment.Text.Replace("'", "");
                 long date = (int)(comment.Date - new DateTime(1970, 1, 1)).TotalSeconds;
                 com = string.Format("INSERT INTO '" + tb_comments + @"' ('comment_id','user_id','topic_id','comment_text','comment_date','comment_likes') VALUES ('{0}','{1}','{2}','{3}','{4}','{5}');",
                     comment.CommentID,
@@ -122,6 +123,41 @@ namespace turizm.Lib.DB
             List<Comment> test = ExecuteCommentReader("SELECT * FROM 'tb_comments'");
         }
 
+        /// <summary>
+        /// добавление многих записей в БД
+        /// </summary>
+        /// <param name="comments"></param>
+        protected void Add(List<Comment> comments, Action<string> callback)
+        {
+            lock (this.connection)
+            {
+                this.connection.Open();
+                SQLiteTransaction trans = this.connection.BeginTransaction();
+                double all = comments.Count;
+                for (int i = 0; i < comments.Count; i++)
+                {
+                    SQLiteCommand cm = connection.CreateCommand();
+
+                    comments[i].Text = comments[i].Text.Replace("'", "");
+                    long date = (int)(comments[i].Date - new DateTime(1970, 1, 1)).TotalSeconds;
+                    string com = string.Format("INSERT INTO '" + tb_comments + @"' ('comment_id','user_id','topic_id','comment_text','comment_date','comment_likes') VALUES ('{0}','{1}','{2}','{3}','{4}','{5}');",
+                    comments[i].CommentID,
+                    comments[i].UserID,
+                    comments[i].TopicID,
+                    comments[i].Text,
+                    date,
+                    comments[i].Likes
+                    );
+
+                    cm.CommandText = com;
+                    cm.ExecuteNonQuery();
+                    if (i % 200 == 0 && callback != null)
+                        callback.Invoke("Запись данных в кэш: завершено " + ((i / all) * 100d).ToString("0.0"));
+                }
+                trans.Commit();
+                this.connection.Close();
+            }
+        }
 
         /// <summary>
         /// выполнение запроса без результата
@@ -165,11 +201,11 @@ namespace turizm.Lib.DB
                     long user_id = Convert.ToInt64(dr["user_id"]);
                     long topic_id = Convert.ToInt64(dr["topic_id"]);
                     string text = dr["comment_text"] is DBNull ? "" : dr["comment_text"].ToString();
-                    long likes =dr["comment_likes"] is DBNull ? 0 : Convert.ToInt64(dr["comment_likes"]);
+                    long likes = dr["comment_likes"] is DBNull ? 0 : Convert.ToInt64(dr["comment_likes"]);
                     res.Add(new Comment()
                     {
                         CommentID = com_id,
-                        UserID = user_id ,
+                        UserID = user_id,
                         TopicID = topic_id,
                         Text = text,
                         Date = parsed_date,
