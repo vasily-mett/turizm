@@ -9,6 +9,9 @@ using turizm.Lib.Classes;
 
 namespace turizm.Lib.DB
 {
+    /// <summary>
+    /// база данных комментариев
+    /// </summary>
     public class CommentDatabase : BaseDB
     {
 

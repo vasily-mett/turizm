@@ -18,17 +18,33 @@ namespace turizm
 {
     public partial class FormMain : Form
     {
+        Options options;
+
+        /// <summary>
+        /// конструктор, настройка внешнего вида
+        /// </summary>
         public FormMain()
         {
             InitializeComponent();
+            options = new Options();
+            foreach (string link in options.Topics)
+            {
+                ListViewItem item = new ListViewItem(link);
+                listViewTopics.Items.Add(item);
+            }
         }
 
+        /// <summary>
+        /// кнопка обновить БД
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void buttonUpdateDB_Click(object sender, EventArgs e)
         {
-            Options opt = new Options();
-            CommentDatabase db = new CommentDatabase(opt);
-            VK vk = new VK(opt);
-            vk.UpdateDB(db, opt, new Action<int>((arg) => { }));
+
+            CommentDatabase db = new CommentDatabase(options);
+            VK vk = new VK(options);
+            vk.UpdateDB(db, options, new Action<int>((arg) => { }));
         }
     }
 }

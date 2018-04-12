@@ -29,11 +29,12 @@
         private void InitializeComponent()
         {
             this.buttonUpdateDB = new System.Windows.Forms.Button();
+            this.listViewTopics = new System.Windows.Forms.ListView();
             this.SuspendLayout();
             // 
             // buttonUpdateDB
             // 
-            this.buttonUpdateDB.Location = new System.Drawing.Point(248, 12);
+            this.buttonUpdateDB.Location = new System.Drawing.Point(356, 12);
             this.buttonUpdateDB.Name = "buttonUpdateDB";
             this.buttonUpdateDB.Size = new System.Drawing.Size(91, 23);
             this.buttonUpdateDB.TabIndex = 0;
@@ -41,13 +42,23 @@
             this.buttonUpdateDB.UseVisualStyleBackColor = true;
             this.buttonUpdateDB.Click += new System.EventHandler(this.buttonUpdateDB_Click);
             // 
-            // Form1
+            // listViewTopics
+            // 
+            this.listViewTopics.Location = new System.Drawing.Point(12, 12);
+            this.listViewTopics.Name = "listViewTopics";
+            this.listViewTopics.Size = new System.Drawing.Size(325, 221);
+            this.listViewTopics.TabIndex = 1;
+            this.listViewTopics.UseCompatibleStateImageBehavior = false;
+            this.listViewTopics.View = System.Windows.Forms.View.List;
+            // 
+            // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(459, 432);
+            this.Controls.Add(this.listViewTopics);
             this.Controls.Add(this.buttonUpdateDB);
-            this.Name = "Form1";
+            this.Name = "FormMain";
             this.Text = "Туризм";
             this.ResumeLayout(false);
 
@@ -56,6 +67,7 @@
         #endregion
 
         private System.Windows.Forms.Button buttonUpdateDB;
+        private System.Windows.Forms.ListView listViewTopics;
     }
 }
 
