@@ -19,6 +19,14 @@ namespace turizm.Lib.DB
         private readonly Options options;
 
         /// <summary>
+        /// общее количество комментариев в базе данных
+        /// </summary>
+        public long TotalComments { get {
+
+                return base.Count(tb_comments);
+            } }
+
+        /// <summary>
         /// открывает базу данных, если файла не существует, то создает пустой
         /// </summary>
         /// <param name="options"></param>
@@ -58,7 +66,7 @@ namespace turizm.Lib.DB
         /// <returns></returns>
         private bool TopicExists(long topicID)
         {
-            string com = "SELECT * FROM '" + tb_topics + "' WHERE topic_id = '" + topicID+"';";
+            string com = "SELECT * FROM '" + tb_topics + "' WHERE topic_id = '" + topicID + "';";
             List<Topic> tops = ExecuteTopicReader(com);
             return tops.Count > 0;
         }
@@ -94,7 +102,7 @@ namespace turizm.Lib.DB
         /// <param name="new_comments"></param>
         internal void AddComments(List<Comment> new_comments, Action<string> callback)
         {
-            this.Add(new_comments,callback);
+            this.Add(new_comments, callback);
         }
 
         /// <summary>
@@ -104,7 +112,7 @@ namespace turizm.Lib.DB
         /// <returns></returns>
         internal Comment GetLastComment(Topic t)
         {
-            string com = "SELECT * FROM '" + tb_comments + "' WHERE topic_id = " + t.TopicID;
+            string com = "SELECT * FROM '" + tb_comments + "' WHERE comment_date = (SELECT MAX(comment_date) FROM '" + tb_comments + "' WHERE topic_id=" + t.TopicID + @")";
             List<Comment> comms = ExecuteCommentReader(com);
             Comment max = comms.Max();
             return max;

@@ -20,6 +20,18 @@ namespace turizm.Lib.DB
         private readonly string FileName;
         protected const string tb_topics = "tb_topics";
         protected const string tb_comments = "tb_comments";
+
+        /// <summary>
+        /// подсчет количества строк в заданной таблице
+        /// </summary>
+        /// <param name="tb_comments"></param>
+        /// <returns></returns>
+        internal long Count(string tb_comments)
+        {
+            string com = "SELECT COUNT(1) FROM '" + tb_comments + "'";
+            return long.Parse(ExecuteSingle(com));
+        }
+
         private readonly string databaseDirectory;
 
         /// <summary>
@@ -251,6 +263,27 @@ namespace turizm.Lib.DB
                 connection.Close();
                 return res;
             }
+        }
+
+        /// <summary>
+        /// выполнить запрос с одним результатом
+        /// </summary>
+        /// <param name="com"></param>
+        /// <returns></returns>
+        protected string ExecuteSingle(string com)
+        {
+            connection.Open();
+            SQLiteCommand cmd = connection.CreateCommand();
+            cmd.CommandText = com;
+            SQLiteDataReader dr = cmd.ExecuteReader();
+            bool ff = dr.Read();
+            if (ff)
+            {
+                string res = dr[0].ToString();
+                connection.Close();
+                return res.ToString();
+            }
+            else return "";
         }
 
     }

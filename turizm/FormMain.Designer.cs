@@ -30,6 +30,7 @@
         {
             this.buttonUpdateDB = new System.Windows.Forms.Button();
             this.listViewTopics = new System.Windows.Forms.ListView();
+            this.labelTotal = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // buttonUpdateDB
@@ -51,16 +52,27 @@
             this.listViewTopics.UseCompatibleStateImageBehavior = false;
             this.listViewTopics.View = System.Windows.Forms.View.List;
             // 
+            // labelTotal
+            // 
+            this.labelTotal.AutoSize = true;
+            this.labelTotal.Location = new System.Drawing.Point(12, 236);
+            this.labelTotal.Name = "labelTotal";
+            this.labelTotal.Size = new System.Drawing.Size(35, 13);
+            this.labelTotal.TabIndex = 2;
+            this.labelTotal.Text = "label1";
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(459, 432);
+            this.Controls.Add(this.labelTotal);
             this.Controls.Add(this.listViewTopics);
             this.Controls.Add(this.buttonUpdateDB);
             this.Name = "FormMain";
             this.Text = "Туризм";
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -68,6 +80,7 @@
 
         private System.Windows.Forms.Button buttonUpdateDB;
         private System.Windows.Forms.ListView listViewTopics;
+        private System.Windows.Forms.Label labelTotal;
     }
 }
 

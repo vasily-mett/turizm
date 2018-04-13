@@ -41,10 +41,10 @@ namespace turizm
         /// <param name="e"></param>
         private void buttonUpdateDB_Click(object sender, EventArgs e)
         {
-
             CommentDatabase db = new CommentDatabase(options);
             VK vk = new VK(options);
             vk.UpdateDB(db, options, new Action<int>((arg) => { }));
+            labelTotal.Text = "Количество комментариев в базе: "+ db.TotalComments.ToString();
         }
     }
 }
