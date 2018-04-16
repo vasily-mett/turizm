@@ -30,7 +30,8 @@
         {
             this.buttonUpdateDB = new System.Windows.Forms.Button();
             this.listViewTopics = new System.Windows.Forms.ListView();
-            this.labelTotal = new System.Windows.Forms.Label();
+            this.labelTotalComments = new System.Windows.Forms.Label();
+            this.labelTotalUsers = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // buttonUpdateDB
@@ -52,21 +53,31 @@
             this.listViewTopics.UseCompatibleStateImageBehavior = false;
             this.listViewTopics.View = System.Windows.Forms.View.List;
             // 
-            // labelTotal
+            // labelTotalComments
             // 
-            this.labelTotal.AutoSize = true;
-            this.labelTotal.Location = new System.Drawing.Point(12, 236);
-            this.labelTotal.Name = "labelTotal";
-            this.labelTotal.Size = new System.Drawing.Size(35, 13);
-            this.labelTotal.TabIndex = 2;
-            this.labelTotal.Text = "label1";
+            this.labelTotalComments.AutoSize = true;
+            this.labelTotalComments.Location = new System.Drawing.Point(12, 236);
+            this.labelTotalComments.Name = "labelTotalComments";
+            this.labelTotalComments.Size = new System.Drawing.Size(35, 13);
+            this.labelTotalComments.TabIndex = 2;
+            this.labelTotalComments.Text = "label1";
+            // 
+            // labelTotalUsers
+            // 
+            this.labelTotalUsers.AutoSize = true;
+            this.labelTotalUsers.Location = new System.Drawing.Point(12, 249);
+            this.labelTotalUsers.Name = "labelTotalUsers";
+            this.labelTotalUsers.Size = new System.Drawing.Size(35, 13);
+            this.labelTotalUsers.TabIndex = 2;
+            this.labelTotalUsers.Text = "label1";
             // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(459, 432);
-            this.Controls.Add(this.labelTotal);
+            this.Controls.Add(this.labelTotalUsers);
+            this.Controls.Add(this.labelTotalComments);
             this.Controls.Add(this.listViewTopics);
             this.Controls.Add(this.buttonUpdateDB);
             this.Name = "FormMain";
@@ -80,7 +91,8 @@
 
         private System.Windows.Forms.Button buttonUpdateDB;
         private System.Windows.Forms.ListView listViewTopics;
-        private System.Windows.Forms.Label labelTotal;
+        private System.Windows.Forms.Label labelTotalComments;
+        private System.Windows.Forms.Label labelTotalUsers;
     }
 }
 

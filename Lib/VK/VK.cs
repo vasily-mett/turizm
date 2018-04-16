@@ -12,6 +12,7 @@ using turizm.Lib.DB;
 using turizm.Lib.Classes;
 using VkNet.Utils;
 using Newtonsoft.Json.Linq;
+using turizm.Lib.Filter;
 
 namespace turizm.Lib.VK
 {
@@ -22,15 +23,26 @@ namespace turizm.Lib.VK
     {
         private readonly VkApi api;
         private readonly Options options;
+        private readonly CommentPrefilter prefilter;
+        private readonly CommentDatabase db;
+
+        /// <summary>
+        /// тип автора комментария. Человек, группа
+        /// </summary>
+        public enum CommentAutorType {
+            User,  Group
+        }
 
         /// <summary>
         /// конструктор с настройками
         /// </summary>
         /// <param name="options"></param>
-        public VK(Options options)
+        public VK(Options options, CommentDatabase db)
         {
             this.options = options;
+            this.db = db;
             api = new VkApi();
+            prefilter = new CommentPrefilter(api,db);
             ApiAuthParams par = new ApiAuthParams
             {
                 AccessToken = options.AccessToken
@@ -59,9 +71,11 @@ namespace turizm.Lib.VK
             {
                 Comment last_comm = database.GetLastComment(t);
                 DateTime start = DateTime.Now;
-                List<Comment> new_comments = GetCommentsFrom(t, last_comm);
+                CommentsResponse response = GetCommentsFrom(t, last_comm);
+                database.AddUsers(response.Users,(str)=> { });
+                List<Comment> filtered_comments = prefilter.Prefilter(response.Comments);
                 TimeSpan get = DateTime.Now - start;
-                database.AddComments(new_comments, (str)=> { });
+                database.AddComments(filtered_comments, (str)=> { });
                 TimeSpan write = DateTime.Now - start - get;
             }
         }
@@ -72,7 +86,7 @@ namespace turizm.Lib.VK
         /// <param name="t">обсуждение</param>
         /// <param name="last_comm">комментарий, с которого надо начать (не включая его)</param>
         /// <returns></returns>
-        private List<Comment> GetCommentsFrom(Topic t, Comment last_comm)
+        private CommentsResponse GetCommentsFrom(Topic t, Comment last_comm)
         {
             if (t == null)
                 throw new ArgumentException("Нельзя найти комментарии неопределенного обсуждения");
@@ -83,15 +97,17 @@ namespace turizm.Lib.VK
             else
                 start_comment_id = "&start_comment_id=" + last_comm.CommentID.ToString();
 
-            List<Comment> res = new List<Comment>();
+           CommentsResponse res = new CommentsResponse();
 
-            string url = string.Format("https://api.vk.com/method/board.getComments?group_id={0}&topic_id={1}&need_likes=1{2}&count={3}&v=5.52",
+            string url = string.Format("https://api.vk.com/method/board.getComments?group_id={0}&topic_id={1}&need_likes=1{2}&count={3}&extended=1&v=5.52",
                 t.GroupID,
                 t.TopicID,
                 start_comment_id,
                 100 //запрашиваем по 100 комментариев
                 );
             JToken json = this.GetJson(url);
+            
+            //добавление комментариев
             JToken items = json["response"]["items"];
             foreach (JToken item in items)
             {
@@ -104,6 +120,16 @@ namespace turizm.Lib.VK
                 res.Add(new Comment() { CommentID = comment_id, Likes = likes, Text = text, TopicID = t.TopicID, UserID = from_id, Date = parsed_date });
             }
 
+            //добавление пользователей
+            JToken profiles = json["response"]["profiles"];
+            foreach (JToken profile in profiles)
+            {
+                long id = long.Parse(profile["id"].ToString());
+                string fname = profile["first_name"].ToString();
+                string lname = profile["last_name"].ToString();
+                res.Add(new User() { FirstName = fname, LastName = lname, UserID = id });
+            }
+
             int total = int.Parse(json["response"]["count"].ToString());
 
             //сдвиг на сколько комментариев уже передвинулись в этом обсуждении
@@ -113,13 +139,13 @@ namespace turizm.Lib.VK
             else
                 offset = int.Parse(json["response"]["real_offset"].ToString());
 
-            if (total - offset > res.Count)
-                res.AddRange(GetCommentsFrom(t, res[res.Count - 1]));
+            if (total - offset > res.CountComents)
+                res.Add(GetCommentsFrom(t, res.Comments[res.CountComents - 1])); //рекурсивно добавляем остальные комментарии
 
             //если был задан стартовый элемент, то надо удалить, а то он два раз добавляется
             //да, ненаучно, но что делать)
             if (last_comm != null)
-                res.RemoveAt(0);
+                res.RemoveCommentAt(0);
 
             return res;
         }

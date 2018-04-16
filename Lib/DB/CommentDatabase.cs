@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Data.SQLite;
 using System.IO;
 using turizm.Lib.Classes;
+using VkNet.Enums;
 
 namespace turizm.Lib.DB
 {
@@ -22,9 +23,13 @@ namespace turizm.Lib.DB
         /// общее количество комментариев в базе данных
         /// </summary>
         public long TotalComments { get {
-
                 return base.Count(tb_comments);
             } }
+
+        /// <summary>
+        /// общее количество пользователей в БД
+        /// </summary>
+        public long TotalUsers { get { return Count(tb_users); } }
 
         /// <summary>
         /// открывает базу данных, если файла не существует, то создает пустой
@@ -55,6 +60,8 @@ namespace turizm.Lib.DB
         /// <param name="t"></param>
         private void AddTopic(Topic t)
         {
+            if (t == null)
+                return;
             if (!TopicExists(t.TopicID))
                 Add(t);
         }
@@ -96,14 +103,28 @@ namespace turizm.Lib.DB
 
         }
 
+        internal void AddUsers(List<User> users, Action<string> callback)
+        {
+            if (users == null || users.Count == 0)
+                return;
+            this.Add(users, callback);
+        }
+
+
+
+
         /// <summary>
         /// добавляет комментарии в базу данных
         /// </summary>
         /// <param name="new_comments"></param>
         internal void AddComments(List<Comment> new_comments, Action<string> callback)
         {
+            if (new_comments == null || new_comments.Count == 0)
+                return;
             this.Add(new_comments, callback);
         }
+
+        
 
         /// <summary>
         /// Найти последний (по дате) комментарий в заданной теме

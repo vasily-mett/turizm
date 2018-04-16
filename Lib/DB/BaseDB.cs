@@ -18,17 +18,29 @@ namespace turizm.Lib.DB
         private string connectionString;
         private readonly SQLiteConnection connection;
         private readonly string FileName;
-        protected const string tb_topics = "tb_topics";
-        protected const string tb_comments = "tb_comments";
+        public const string tb_topics = "tb_topics";
+        public const string tb_comments = "tb_comments";
+        public const string tb_users = "tb_users";
 
         /// <summary>
         /// подсчет количества строк в заданной таблице
         /// </summary>
-        /// <param name="tb_comments"></param>
+        /// <param name="tb"></param>
         /// <returns></returns>
-        internal long Count(string tb_comments)
+        internal long Count(string tb)
         {
-            string com = "SELECT COUNT(1) FROM '" + tb_comments + "'";
+            return Count(tb, "");
+        }
+
+        /// <summary>
+        /// возвращает количество строк в заданной таблице и с заданным условием
+        /// </summary>
+        /// <param name="tb_users">таблица</param>
+        /// <param name="condition">условие "WHERE ..."</param>
+        /// <returns></returns>
+        internal long Count(string tb, string condition)
+        {
+            string com = "SELECT COUNT(1) FROM '" + tb + "' " + condition;
             return long.Parse(ExecuteSingle(com));
         }
 
@@ -92,6 +104,12 @@ namespace turizm.Lib.DB
                 comment_likes INTEGER);";
             commCreate.ExecuteNonQuery();
 
+            commCreate.CommandText = @"CREATE TABLE " + tb_users + @" 
+                (user_id INTEGER PRIMARY KEY NOT NULL,
+                first_name TEXT,
+                last_name TEXT);";
+            commCreate.ExecuteNonQuery();
+
             con.Close();
         }
 
@@ -136,7 +154,7 @@ namespace turizm.Lib.DB
         }
 
         /// <summary>
-        /// добавление многих записей в БД
+        /// добавление многих комментариев в БД
         /// </summary>
         /// <param name="comments"></param>
         protected void Add(List<Comment> comments, Action<string> callback)
@@ -170,6 +188,61 @@ namespace turizm.Lib.DB
                 this.connection.Close();
             }
         }
+
+        /// <summary>
+        /// добавление пользователей в БД
+        /// </summary>
+        /// <param name="users"></param>
+        /// <param name="callback"></param>
+        protected void Add(List<User> users_param, Action<string> callback)
+        {
+            //подготовка списка (убираем повторяющихся пользователей)
+            List<long> ids = new List<long>();
+            //List<User> uss = ExecuteUserReader("SELECT user_id FROM " + tb_users); //если так, то быстрее, но ошибка в методе из-за невыбранных полей
+            List<User> uss = ExecuteUserReader("SELECT * FROM " + tb_users);
+            List<User> users = new List<User>();
+            foreach (User us in uss)
+                ids.Add(us.UserID);
+            for (int i = 0; i < users_param.Count;i++)
+                if (!ids.Contains(users_param[i].UserID))
+                {
+                    ids.Add(users_param[i].UserID);
+                    users.Add(users_param[i]);
+                }
+
+            //добавление в БД
+            lock (this.connection)
+            {
+                this.connection.Open();
+                SQLiteTransaction trans = this.connection.BeginTransaction();
+                double all = users.Count;
+                for (int i = 0; i < users.Count; i++)
+                {
+                    SQLiteCommand cm = connection.CreateCommand();
+
+                    //string com = string.Format("UPDATE OR IGNORE '" + tb_users + @"' SET user_id={0},first_name='{1}',last_name='{2}'",
+                    //users[i].UserID,
+                    //users[i].FirstName.Replace("\'",""),
+                    //users[i].LastName.Replace("\'", "")
+                    //);
+
+                   
+
+                    string com = string.Format("INSERT INTO '" + tb_users + @"' ('user_id','first_name','last_name') VALUES ('{0}','{1}','{2}');",
+                   users[i].UserID,
+                   users[i].FirstName.Replace("\'", ""),
+                   users[i].LastName.Replace("\'", ""));
+
+                    cm.CommandText = com;
+                    cm.ExecuteNonQuery();
+                    if (i % 200 == 0 && callback != null)
+                        callback.Invoke("Запись данных в кэш: завершено " + ((i / all) * 100d).ToString("0.0"));
+                }
+                trans.Commit();
+                this.connection.Close();
+            }
+        }
+
 
         /// <summary>
         /// выполнение запроса без результата
@@ -230,6 +303,35 @@ namespace turizm.Lib.DB
             }
         }
 
+        private List<User> ExecuteUserReader(string com)
+        {
+            lock (connection)
+            {
+                connection.Open();
+                SQLiteCommand cmd = connection.CreateCommand();
+                cmd.CommandText = com;
+                SQLiteDataReader dr = cmd.ExecuteReader();
+
+                List<User> res = new List<User>();
+
+                while (dr.Read())
+                {
+                    long user_id = Convert.ToInt64(dr["user_id"]);
+
+                    string lname = dr["last_name"] is DBNull ? "" : dr["last_name"].ToString();
+                    string fname = dr["first_name"] is DBNull ? "" : dr["first_name"].ToString();
+                    res.Add(new User()
+                    {
+                        FirstName = fname,
+                        LastName = lname,
+                        UserID = user_id
+                    });
+                }
+
+                connection.Close();
+                return res;
+            }
+        }
 
         /// <summary>
         /// выполнение запроса с результатом
@@ -272,7 +374,7 @@ namespace turizm.Lib.DB
         /// <returns></returns>
         protected string ExecuteSingle(string com)
         {
-            connection.Open();
+            connection.Open(); //если возникает ошибка, то, значит connection уже где-то открыт
             SQLiteCommand cmd = connection.CreateCommand();
             cmd.CommandText = com;
             SQLiteDataReader dr = cmd.ExecuteReader();
