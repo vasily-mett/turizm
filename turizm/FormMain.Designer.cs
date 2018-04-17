@@ -32,6 +32,7 @@
             this.listViewTopics = new System.Windows.Forms.ListView();
             this.labelTotalComments = new System.Windows.Forms.Label();
             this.labelTotalUsers = new System.Windows.Forms.Label();
+            this.labelProgress = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // buttonUpdateDB
@@ -71,11 +72,22 @@
             this.labelTotalUsers.TabIndex = 2;
             this.labelTotalUsers.Text = "label1";
             // 
+            // labelProgress
+            // 
+            this.labelProgress.AutoSize = true;
+            this.labelProgress.Location = new System.Drawing.Point(12, 262);
+            this.labelProgress.Name = "labelProgress";
+            this.labelProgress.Size = new System.Drawing.Size(35, 13);
+            this.labelProgress.TabIndex = 2;
+            this.labelProgress.Text = "label1";
+            this.labelProgress.Visible = false;
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(459, 432);
+            this.Controls.Add(this.labelProgress);
             this.Controls.Add(this.labelTotalUsers);
             this.Controls.Add(this.labelTotalComments);
             this.Controls.Add(this.listViewTopics);
@@ -93,6 +105,7 @@
         private System.Windows.Forms.ListView listViewTopics;
         private System.Windows.Forms.Label labelTotalComments;
         private System.Windows.Forms.Label labelTotalUsers;
+        private System.Windows.Forms.Label labelProgress;
     }
 }
 

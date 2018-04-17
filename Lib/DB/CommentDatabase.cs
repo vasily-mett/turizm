@@ -63,7 +63,7 @@ namespace turizm.Lib.DB
             if (t == null)
                 return;
             if (!TopicExists(t.TopicID))
-                Add(t);
+                AddObject(t);
         }
 
         /// <summary>
@@ -103,11 +103,15 @@ namespace turizm.Lib.DB
 
         }
 
-        internal void AddUsers(List<User> users, Action<string> callback)
+        /// <summary>
+        /// добавление пользователей в БД
+        /// </summary>
+        /// <param name="users"></param>
+        internal void AddUsers(List<User> users)
         {
             if (users == null || users.Count == 0)
                 return;
-            this.Add(users, callback);
+            this.Add(users);
         }
 
 
@@ -117,11 +121,11 @@ namespace turizm.Lib.DB
         /// добавляет комментарии в базу данных
         /// </summary>
         /// <param name="new_comments"></param>
-        internal void AddComments(List<Comment> new_comments, Action<string> callback)
+        internal void AddComments(List<Comment> new_comments)
         {
             if (new_comments == null || new_comments.Count == 0)
                 return;
-            this.Add(new_comments, callback);
+            this.Add(new_comments);
         }
 
         

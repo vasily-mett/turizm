@@ -120,7 +120,7 @@ namespace turizm.Lib.DB
         /// <param name="lon">долгота</param>
         /// <param name="alt">высота</param>
         /// <param name="addr">адрес</param>
-        protected void Add(object obj)
+        protected void AddObject(object obj)
         {
             string com = "";
             if (obj is Comment)
@@ -157,13 +157,12 @@ namespace turizm.Lib.DB
         /// добавление многих комментариев в БД
         /// </summary>
         /// <param name="comments"></param>
-        protected void Add(List<Comment> comments, Action<string> callback)
+        protected void Add(List<Comment> comments)
         {
             lock (this.connection)
             {
                 this.connection.Open();
                 SQLiteTransaction trans = this.connection.BeginTransaction();
-                double all = comments.Count;
                 for (int i = 0; i < comments.Count; i++)
                 {
                     SQLiteCommand cm = connection.CreateCommand();
@@ -181,8 +180,6 @@ namespace turizm.Lib.DB
 
                     cm.CommandText = com;
                     cm.ExecuteNonQuery();
-                    if (i % 200 == 0 && callback != null)
-                        callback.Invoke("Запись данных в кэш: завершено " + ((i / all) * 100d).ToString("0.0"));
                 }
                 trans.Commit();
                 this.connection.Close();
@@ -194,7 +191,7 @@ namespace turizm.Lib.DB
         /// </summary>
         /// <param name="users"></param>
         /// <param name="callback"></param>
-        protected void Add(List<User> users_param, Action<string> callback)
+        protected void Add(List<User> users_param)
         {
             //подготовка списка (убираем повторяющихся пользователей)
             List<long> ids = new List<long>();
@@ -210,12 +207,14 @@ namespace turizm.Lib.DB
                     users.Add(users_param[i]);
                 }
 
+            if (users.Count == 0)
+                return;
+
             //добавление в БД
             lock (this.connection)
             {
                 this.connection.Open();
                 SQLiteTransaction trans = this.connection.BeginTransaction();
-                double all = users.Count;
                 for (int i = 0; i < users.Count; i++)
                 {
                     SQLiteCommand cm = connection.CreateCommand();
@@ -235,8 +234,6 @@ namespace turizm.Lib.DB
 
                     cm.CommandText = com;
                     cm.ExecuteNonQuery();
-                    if (i % 200 == 0 && callback != null)
-                        callback.Invoke("Запись данных в кэш: завершено " + ((i / all) * 100d).ToString("0.0"));
                 }
                 trans.Commit();
                 this.connection.Close();

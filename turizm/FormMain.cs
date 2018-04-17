@@ -43,7 +43,9 @@ namespace turizm
         {
             CommentDatabase db = new CommentDatabase(options);
             VK vk = new VK(options,db);
-            vk.UpdateDB(db, options, new Action<int>((arg) => { }));
+            labelProgress.Visible = true;
+            vk.UpdateDB(db, options,labelProgress);
+            labelProgress.Visible = false;
             labelTotalComments.Text = "Количество комментариев в базе: "+ db.TotalComments.ToString();
             labelTotalUsers.Text = "Количество пользователей в базе: " + db.TotalUsers.ToString();
 
