@@ -62,6 +62,7 @@ namespace turizm.Lib.DB
 
             connection = new SQLiteConnection();
             connection.ConnectionString = connectionString;
+            connection.Open();
         }
 
         /// <summary>
@@ -75,6 +76,14 @@ namespace turizm.Lib.DB
                 CreateDB();
 
         }
+
+        /// <summary>
+        /// закрывает базу данных
+        /// </summary>
+        protected void Close() {
+            connection.Close();
+        }
+
 
         /// <summary>
         /// создание пустой базы данных
@@ -150,7 +159,7 @@ namespace turizm.Lib.DB
             }
             ExecuteQuery(com);
 
-            List<Comment> test = ExecuteCommentReader("SELECT * FROM 'tb_comments'");
+            //List<Comment> test = ExecuteCommentReader("SELECT * FROM 'tb_comments'");
         }
 
         /// <summary>
@@ -159,31 +168,27 @@ namespace turizm.Lib.DB
         /// <param name="comments"></param>
         protected void Add(List<Comment> comments)
         {
-            lock (this.connection)
+            SQLiteTransaction trans = this.connection.BeginTransaction();
+            for (int i = 0; i < comments.Count; i++)
             {
-                this.connection.Open();
-                SQLiteTransaction trans = this.connection.BeginTransaction();
-                for (int i = 0; i < comments.Count; i++)
-                {
-                    SQLiteCommand cm = connection.CreateCommand();
+                SQLiteCommand cm = connection.CreateCommand();
 
-                    comments[i].Text = comments[i].Text.Replace("'", "");
-                    long date = (int)(comments[i].Date - new DateTime(1970, 1, 1)).TotalSeconds;
-                    string com = string.Format("INSERT INTO '" + tb_comments + @"' ('comment_id','user_id','topic_id','comment_text','comment_date','comment_likes') VALUES ('{0}','{1}','{2}','{3}','{4}','{5}');",
-                    comments[i].CommentID,
-                    comments[i].UserID,
-                    comments[i].TopicID,
-                    comments[i].Text,
-                    date,
-                    comments[i].Likes
-                    );
+                comments[i].Text = comments[i].Text.Replace("'", "");
+                long date = (int)(comments[i].Date - new DateTime(1970, 1, 1)).TotalSeconds;
+                string com = string.Format("INSERT INTO '" + tb_comments + @"' ('comment_id','user_id','topic_id','comment_text','comment_date','comment_likes') VALUES ('{0}','{1}','{2}','{3}','{4}','{5}');",
+                comments[i].CommentID,
+                comments[i].UserID,
+                comments[i].TopicID,
+                comments[i].Text,
+                date,
+                comments[i].Likes
+                );
 
-                    cm.CommandText = com;
-                    cm.ExecuteNonQuery();
-                }
-                trans.Commit();
-                this.connection.Close();
+                cm.CommandText = com;
+                cm.ExecuteNonQuery();
             }
+            trans.Commit();
+
         }
 
         /// <summary>
@@ -200,7 +205,7 @@ namespace turizm.Lib.DB
             List<User> users = new List<User>();
             foreach (User us in uss)
                 ids.Add(us.UserID);
-            for (int i = 0; i < users_param.Count;i++)
+            for (int i = 0; i < users_param.Count; i++)
                 if (!ids.Contains(users_param[i].UserID))
                 {
                     ids.Add(users_param[i].UserID);
@@ -211,33 +216,28 @@ namespace turizm.Lib.DB
                 return;
 
             //добавление в БД
-            lock (this.connection)
+            SQLiteTransaction trans = this.connection.BeginTransaction();
+            for (int i = 0; i < users.Count; i++)
             {
-                this.connection.Open();
-                SQLiteTransaction trans = this.connection.BeginTransaction();
-                for (int i = 0; i < users.Count; i++)
-                {
-                    SQLiteCommand cm = connection.CreateCommand();
+                SQLiteCommand cm = connection.CreateCommand();
 
-                    //string com = string.Format("UPDATE OR IGNORE '" + tb_users + @"' SET user_id={0},first_name='{1}',last_name='{2}'",
-                    //users[i].UserID,
-                    //users[i].FirstName.Replace("\'",""),
-                    //users[i].LastName.Replace("\'", "")
-                    //);
+                //string com = string.Format("UPDATE OR IGNORE '" + tb_users + @"' SET user_id={0},first_name='{1}',last_name='{2}'",
+                //users[i].UserID,
+                //users[i].FirstName.Replace("\'",""),
+                //users[i].LastName.Replace("\'", "")
+                //);
 
-                   
 
-                    string com = string.Format("INSERT INTO '" + tb_users + @"' ('user_id','first_name','last_name') VALUES ('{0}','{1}','{2}');",
-                   users[i].UserID,
-                   users[i].FirstName.Replace("\'", ""),
-                   users[i].LastName.Replace("\'", ""));
 
-                    cm.CommandText = com;
-                    cm.ExecuteNonQuery();
-                }
-                trans.Commit();
-                this.connection.Close();
+                string com = string.Format("INSERT INTO '" + tb_users + @"' ('user_id','first_name','last_name') VALUES ('{0}','{1}','{2}');",
+               users[i].UserID,
+               users[i].FirstName.Replace("\'", ""),
+               users[i].LastName.Replace("\'", ""));
+
+                cm.CommandText = com;
+                cm.ExecuteNonQuery();
             }
+            trans.Commit();
         }
 
 
@@ -248,15 +248,10 @@ namespace turizm.Lib.DB
         /// <returns></returns>
         protected int ExecuteQuery(string query)
         {
-            lock (connection)
-            {
-                connection.Open();
-                SQLiteCommand com = connection.CreateCommand();
-                com.CommandText = query;
-                int i = com.ExecuteNonQuery();
-                connection.Close();
-                return i;
-            }
+            SQLiteCommand com = connection.CreateCommand();
+            com.CommandText = query;
+            int i = com.ExecuteNonQuery();
+            return i;
         }
 
         /// <summary>
@@ -266,68 +261,61 @@ namespace turizm.Lib.DB
         /// <returns></returns>
         protected List<Comment> ExecuteCommentReader(string com)
         {
-            lock (connection)
+            SQLiteCommand cmd = connection.CreateCommand();
+            cmd.CommandText = com;
+            SQLiteDataReader dr = cmd.ExecuteReader();
+
+            List<Comment> res = new List<Comment>();
+
+            while (dr.Read())
             {
-                connection.Open();
-                SQLiteCommand cmd = connection.CreateCommand();
-                cmd.CommandText = com;
-                SQLiteDataReader dr = cmd.ExecuteReader();
-
-                List<Comment> res = new List<Comment>();
-
-                while (dr.Read())
+                long d = dr["comment_date"] is DBNull ? 0 : Convert.ToInt64(dr["comment_date"]);
+                DateTime parsed_date = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc).AddSeconds(d);
+                long com_id = Convert.ToInt64(dr["comment_id"]);
+                long user_id = Convert.ToInt64(dr["user_id"]);
+                long topic_id = Convert.ToInt64(dr["topic_id"]);
+                string text = dr["comment_text"] is DBNull ? "" : dr["comment_text"].ToString();
+                long likes = dr["comment_likes"] is DBNull ? 0 : Convert.ToInt64(dr["comment_likes"]);
+                res.Add(new Comment()
                 {
-                    long d = dr["comment_date"] is DBNull ? 0 : Convert.ToInt64(dr["comment_date"]);
-                    DateTime parsed_date = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc).AddSeconds(d);
-                    long com_id = Convert.ToInt64(dr["comment_id"]);
-                    long user_id = Convert.ToInt64(dr["user_id"]);
-                    long topic_id = Convert.ToInt64(dr["topic_id"]);
-                    string text = dr["comment_text"] is DBNull ? "" : dr["comment_text"].ToString();
-                    long likes = dr["comment_likes"] is DBNull ? 0 : Convert.ToInt64(dr["comment_likes"]);
-                    res.Add(new Comment()
-                    {
-                        CommentID = com_id,
-                        UserID = user_id,
-                        TopicID = topic_id,
-                        Text = text,
-                        Date = parsed_date,
-                        Likes = likes
-                    });
-                }
-
-                connection.Close();
-                return res;
+                    CommentID = com_id,
+                    UserID = user_id,
+                    TopicID = topic_id,
+                    Text = text,
+                    Date = parsed_date,
+                    Likes = likes
+                });
             }
+
+            return res;
+
         }
 
         private List<User> ExecuteUserReader(string com)
         {
-            lock (connection)
+
+            SQLiteCommand cmd = connection.CreateCommand();
+            cmd.CommandText = com;
+            SQLiteDataReader dr = cmd.ExecuteReader();
+
+            List<User> res = new List<User>();
+
+            while (dr.Read())
             {
-                connection.Open();
-                SQLiteCommand cmd = connection.CreateCommand();
-                cmd.CommandText = com;
-                SQLiteDataReader dr = cmd.ExecuteReader();
+                long user_id = Convert.ToInt64(dr["user_id"]);
 
-                List<User> res = new List<User>();
-
-                while (dr.Read())
+                string lname = dr["last_name"] is DBNull ? "" : dr["last_name"].ToString();
+                string fname = dr["first_name"] is DBNull ? "" : dr["first_name"].ToString();
+                res.Add(new User()
                 {
-                    long user_id = Convert.ToInt64(dr["user_id"]);
-
-                    string lname = dr["last_name"] is DBNull ? "" : dr["last_name"].ToString();
-                    string fname = dr["first_name"] is DBNull ? "" : dr["first_name"].ToString();
-                    res.Add(new User()
-                    {
-                        FirstName = fname,
-                        LastName = lname,
-                        UserID = user_id
-                    });
-                }
-
-                connection.Close();
-                return res;
+                    FirstName = fname,
+                    LastName = lname,
+                    UserID = user_id
+                });
             }
+
+            return res;
+
         }
 
         /// <summary>
@@ -337,31 +325,28 @@ namespace turizm.Lib.DB
         /// <returns></returns>
         protected List<Topic> ExecuteTopicReader(string com)
         {
-            lock (connection)
+
+            SQLiteCommand cmd = connection.CreateCommand();
+            cmd.CommandText = com;
+            SQLiteDataReader dr = cmd.ExecuteReader();
+
+            List<Topic> res = new List<Topic>();
+
+            while (dr.Read())
             {
-                connection.Open();
-                SQLiteCommand cmd = connection.CreateCommand();
-                cmd.CommandText = com;
-                SQLiteDataReader dr = cmd.ExecuteReader();
-
-                List<Topic> res = new List<Topic>();
-
-                while (dr.Read())
+                long gr = Convert.ToInt64(dr["group_id"]);
+                long ti = Convert.ToInt64(dr["topic_id"]);
+                string nm = dr["name"] is DBNull ? "" : dr["name"].ToString();
+                res.Add(new Topic()
                 {
-                    long gr = Convert.ToInt64(dr["group_id"]);
-                    long ti = Convert.ToInt64(dr["topic_id"]);
-                    string nm = dr["name"] is DBNull ? "" : dr["name"].ToString();
-                    res.Add(new Topic()
-                    {
-                        GroupID = gr,
-                        TopicID = ti,
-                        Name = nm
-                    });
-                }
-
-                connection.Close();
-                return res;
+                    GroupID = gr,
+                    TopicID = ti,
+                    Name = nm
+                });
             }
+
+            return res;
+
         }
 
         /// <summary>
@@ -371,7 +356,6 @@ namespace turizm.Lib.DB
         /// <returns></returns>
         protected string ExecuteSingle(string com)
         {
-            connection.Open(); //если возникает ошибка, то, значит connection уже где-то открыт
             SQLiteCommand cmd = connection.CreateCommand();
             cmd.CommandText = com;
             SQLiteDataReader dr = cmd.ExecuteReader();
@@ -379,7 +363,6 @@ namespace turizm.Lib.DB
             if (ff)
             {
                 string res = dr[0].ToString();
-                connection.Close();
                 return res.ToString();
             }
             else return "";
