@@ -45,6 +45,7 @@ namespace turizm
             VK vk = new VK(options,db);
             labelProgress.Visible = true;
             vk.UpdateDB(db, options,labelProgress);
+            db.Close();
             labelProgress.Visible = false;
             labelTotalComments.Text = "Количество комментариев в базе: "+ db.TotalComments.ToString();
             labelTotalUsers.Text = "Количество пользователей в базе: " + db.TotalUsers.ToString();

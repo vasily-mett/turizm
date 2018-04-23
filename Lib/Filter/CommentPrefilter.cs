@@ -8,7 +8,6 @@ using turizm.Lib.Classes;
 using turizm.Lib.DB;
 using VkNet;
 using VkNet.Enums;
-using static turizm.Lib.VK.VK;
 
 namespace turizm.Lib.Filter
 {
@@ -17,12 +16,15 @@ namespace turizm.Lib.Filter
     /// </summary>
     class CommentPrefilter
     {
-        private readonly VkApi api;
         private readonly CommentDatabase db;
+        private readonly Regex RegExpressionLink = new Regex(@"w*(https?:\/\/)?([\w\.]+)\.([a-z]{2,6}\.?)(\/[\w\.]*)*\/?w*");
 
-        public CommentPrefilter(VkNet.VkApi api, CommentDatabase db)
+        /// <summary>
+        /// создает новый экземпляр фильтра комментариев
+        /// </summary>
+        /// <param name="db">база данных с добавленными пользователями</param>
+        public CommentPrefilter(CommentDatabase db)
         {
-            this.api = api;
             this.db = db;
         }
 
@@ -30,8 +32,8 @@ namespace turizm.Lib.Filter
         /// <summary>
         /// отсеивает комментарии для сохранения в БД
         /// </summary>
-        /// <param name="new_comments"></param>
-        /// <returns></returns>
+        /// <param name="new_comments">скачанные комментарии</param>
+        /// <returns>комментарии, которые надо добавлять в БД</returns>
         internal List<Comment> Prefilter(List<Comment> new_comments)
         {
             List<Comment> res = new List<Comment>();
@@ -81,17 +83,13 @@ namespace turizm.Lib.Filter
         }
 
         /// <summary>
-        /// проверяет автора комментария. Если это обычный пользователь, то возвращает 
+        /// проверяет автора комментария и возвращает тип
         /// </summary>
         /// <param name="comm"></param>
         /// <returns></returns>
         private VkObjectType CommentFrom(Comment comm)
         {
-            //долго работает
-            //var v = api.Utils.ResolveScreenName("id" + comm.UserID);
-            //return v.Type;
-
-            long c = db.Count(CommentDatabase.tb_users, "WHERE user_id=" + comm.UserID.ToString());
+            long c = db.Count(BaseDB.tb_users, "WHERE user_id=" + comm.UserID.ToString());
             return c != 0 ? VkObjectType.User : VkObjectType.Group;
         }
 
@@ -102,8 +100,9 @@ namespace turizm.Lib.Filter
         /// <returns></returns>
         private bool ContainsLink(Comment comm)
         {
-            Regex reg = new Regex(@"w*(https?:\/\/)?([\w\.]+)\.([a-z]{2,6}\.?)(\/[\w\.]*)*\/?w*");
-            bool res = reg.IsMatch(comm.Text);
+            //TODO: Умненьшить нагрузку на проц. (заменить регулярку на что-то ещё, не такое прожорливое)
+            
+            bool res = RegExpressionLink.IsMatch(comm.Text);
             return res;
         }
     }

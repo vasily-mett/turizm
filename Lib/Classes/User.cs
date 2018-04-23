@@ -26,12 +26,22 @@ namespace turizm.Lib.Classes
         /// </summary>
         public string LastName { get; set; }
 
+        /// <summary>
+        /// проверка пользователей на идентичность. Для работы метода List<>.Contains()
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         public override bool Equals(object obj)
         {
             if (obj is User)
                 return this.UserID == (obj as User).UserID;
             else
                 return base.Equals(obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
         }
     }
 }

@@ -44,7 +44,7 @@ namespace turizm.Lib.VK
             this.options = options;
             this.db = db;
             api = new VkApi();
-            prefilter = new CommentPrefilter(api, db);
+            prefilter = new CommentPrefilter(db);
             ApiAuthParams par = new ApiAuthParams
             {
                 AccessToken = options.AccessToken

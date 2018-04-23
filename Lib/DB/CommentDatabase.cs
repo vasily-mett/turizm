@@ -15,8 +15,6 @@ namespace turizm.Lib.DB
     /// </summary>
     public class CommentDatabase : BaseDB
     {
-
-
         private readonly Options options;
 
         /// <summary>
@@ -41,8 +39,6 @@ namespace turizm.Lib.DB
             this.options = options;
             OpenDB();
         }
-
-
 
         /// <summary>
         /// обновляет базу данных, добавляет недостающие обсуждеия
@@ -77,7 +73,6 @@ namespace turizm.Lib.DB
             List<Topic> tops = ExecuteTopicReader(com);
             return tops.Count > 0;
         }
-
 
         /// <summary>
         /// преобразование текстовых ссылок в массив объектов Topic
@@ -114,9 +109,6 @@ namespace turizm.Lib.DB
             this.Add(users);
         }
 
-
-
-
         /// <summary>
         /// добавляет комментарии в базу данных
         /// </summary>
@@ -127,8 +119,6 @@ namespace turizm.Lib.DB
                 return;
             this.Add(new_comments);
         }
-
-        
 
         /// <summary>
         /// Найти последний (по дате) комментарий в заданной теме

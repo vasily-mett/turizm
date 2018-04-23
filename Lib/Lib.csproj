@@ -99,7 +99,7 @@
     <Compile Include="Classes\User.cs" />
     <Compile Include="DB\BaseDB.cs" />
     <Compile Include="DB\CommentDatabase.cs" />
-    <Compile Include="Filter\CommentFilter.cs" />
+    <Compile Include="Filter\CommentPrefilter.cs" />
     <Compile Include="Options.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VK\BaseHttp.cs" />

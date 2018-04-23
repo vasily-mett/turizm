@@ -18,6 +18,7 @@ namespace turizm.Lib.DB
         private string connectionString;
         private readonly SQLiteConnection connection;
         private readonly string FileName;
+        private readonly string databaseDirectory;
         public const string tb_topics = "tb_topics";
         public const string tb_comments = "tb_comments";
         public const string tb_users = "tb_users";
@@ -43,8 +44,6 @@ namespace turizm.Lib.DB
             string com = "SELECT COUNT(1) FROM '" + tb + "' " + condition;
             return long.Parse(ExecuteSingle(com));
         }
-
-        private readonly string databaseDirectory;
 
         /// <summary>
         /// создает базу данных или открывает готовую
@@ -80,10 +79,9 @@ namespace turizm.Lib.DB
         /// <summary>
         /// закрывает базу данных
         /// </summary>
-        protected void Close() {
+        public void Close() {
             connection.Close();
         }
-
 
         /// <summary>
         /// создание пустой базы данных
@@ -194,8 +192,7 @@ namespace turizm.Lib.DB
         /// <summary>
         /// добавление пользователей в БД
         /// </summary>
-        /// <param name="users"></param>
-        /// <param name="callback"></param>
+        /// <param name="users">список пользователей для добавления</param>
         protected void Add(List<User> users_param)
         {
             //подготовка списка (убираем повторяющихся пользователей)
@@ -240,11 +237,10 @@ namespace turizm.Lib.DB
             trans.Commit();
         }
 
-
         /// <summary>
         /// выполнение запроса без результата
         /// </summary>
-        /// <param name="query"></param>
+        /// <param name="query">команда SQL</param>
         /// <returns></returns>
         protected int ExecuteQuery(string query)
         {
@@ -255,9 +251,9 @@ namespace turizm.Lib.DB
         }
 
         /// <summary>
-        /// выполнение запроса с результатом
+        /// выполнение запроса с результатом в виде списка комментариев
         /// </summary>
-        /// <param name="com"></param>
+        /// <param name="com">команда SQL</param>
         /// <returns></returns>
         protected List<Comment> ExecuteCommentReader(string com)
         {
@@ -291,6 +287,11 @@ namespace turizm.Lib.DB
 
         }
 
+        /// <summary>
+        /// выполнение запроса с результатом в виде списка пользователей
+        /// </summary>
+        /// <param name="com">команда SQL</param>
+        /// <returns></returns>
         private List<User> ExecuteUserReader(string com)
         {
 
@@ -319,9 +320,9 @@ namespace turizm.Lib.DB
         }
 
         /// <summary>
-        /// выполнение запроса с результатом
-        /// </summary>
-        /// <param name="com"></param>
+        /// выполнение запроса с результатом в виде списка обсуждений
+        /// </summary> 
+        /// <param name="com">команда SQL</param>
         /// <returns></returns>
         protected List<Topic> ExecuteTopicReader(string com)
         {
@@ -352,7 +353,7 @@ namespace turizm.Lib.DB
         /// <summary>
         /// выполнить запрос с одним результатом
         /// </summary>
-        /// <param name="com"></param>
+        /// <param name="com">команда SQL</param>
         /// <returns></returns>
         protected string ExecuteSingle(string com)
         {
