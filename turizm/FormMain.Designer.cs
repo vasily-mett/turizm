@@ -62,6 +62,7 @@
             this.labelTotalComments.Size = new System.Drawing.Size(35, 13);
             this.labelTotalComments.TabIndex = 2;
             this.labelTotalComments.Text = "label1";
+            this.labelTotalComments.Visible = false;
             // 
             // labelTotalUsers
             // 
@@ -71,6 +72,7 @@
             this.labelTotalUsers.Size = new System.Drawing.Size(35, 13);
             this.labelTotalUsers.TabIndex = 2;
             this.labelTotalUsers.Text = "label1";
+            this.labelTotalUsers.Visible = false;
             // 
             // labelProgress
             // 

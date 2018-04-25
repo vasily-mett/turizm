@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using turizm.Lib;
 using turizm.Lib.DB;
+using turizm.Lib.Neuro;
 using turizm.Lib.VK;
 using VkNet;
 using VkNet.Enums.Filters;
@@ -41,12 +42,17 @@ namespace turizm
         /// <param name="e"></param>
         private void buttonUpdateDB_Click(object sender, EventArgs e)
         {
-            CommentDatabase db = new CommentDatabase(options);
+            NWeb web = new NWeb();
+            web.test();
+
+            CommentDatabase db = new CommentDatabase(options.DatabaseFileName);
             VK vk = new VK(options,db);
             labelProgress.Visible = true;
             vk.UpdateDB(db, options,labelProgress);
             db.Close();
             labelProgress.Visible = false;
+            labelTotalComments.Visible = true;
+            labelTotalUsers.Visible = true;
             labelTotalComments.Text = "Количество комментариев в базе: "+ db.TotalComments.ToString();
             labelTotalUsers.Text = "Количество пользователей в базе: " + db.TotalUsers.ToString();
 

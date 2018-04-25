@@ -15,8 +15,6 @@ namespace turizm.Lib.DB
     /// </summary>
     public class CommentDatabase : BaseDB
     {
-        private readonly Options options;
-
         /// <summary>
         /// общее количество комментариев в базе данных
         /// </summary>
@@ -33,10 +31,9 @@ namespace turizm.Lib.DB
         /// открывает базу данных, если файла не существует, то создает пустой
         /// </summary>
         /// <param name="options"></param>
-        public CommentDatabase(Options options)
-            : base(options.DatabaseFileName)
+        public CommentDatabase(string databaseFolder)
+            : base(databaseFolder)
         {
-            this.options = options;
             OpenDB();
         }
 

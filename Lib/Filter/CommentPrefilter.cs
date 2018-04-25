@@ -27,8 +27,7 @@ namespace turizm.Lib.Filter
         {
             this.db = db;
         }
-
-
+        
         /// <summary>
         /// отсеивает комментарии для сохранения в БД
         /// </summary>
@@ -85,7 +84,7 @@ namespace turizm.Lib.Filter
         /// <summary>
         /// проверяет автора комментария и возвращает тип
         /// </summary>
-        /// <param name="comm"></param>
+        /// <param name="comm">проверяемый комментарий</param>
         /// <returns></returns>
         private VkObjectType CommentFrom(Comment comm)
         {
@@ -96,11 +95,11 @@ namespace turizm.Lib.Filter
         /// <summary>
         /// проверяет текст комментария на содержание ссылок
         /// </summary>
-        /// <param name="comm"></param>
+        /// <param name="comm">проверяемый комментарий</param>
         /// <returns></returns>
         private bool ContainsLink(Comment comm)
         {
-            //TODO: Умненьшить нагрузку на проц. (заменить регулярку на что-то ещё, не такое прожорливое)
+            //TODO: Уменьшить нагрузку на проц. (заменить регулярку на что-то ещё, не такое прожорливое)
             
             bool res = RegExpressionLink.IsMatch(comm.Text);
             return res;

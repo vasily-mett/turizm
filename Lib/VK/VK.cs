@@ -45,6 +45,7 @@ namespace turizm.Lib.VK
             this.db = db;
             api = new VkApi();
             prefilter = new CommentPrefilter(db);
+            options.AccessToken = GetToken(options.ApplicationID);
             ApiAuthParams par = new ApiAuthParams
             {
                 AccessToken = options.AccessToken
@@ -168,8 +169,11 @@ namespace turizm.Lib.VK
         /// получение access_token для сессии
         /// </summary>
         /// <returns></returns>
-        private string GetToken()
+        private string GetToken(ulong applicationID)
         {
+            //TODO: Реализовать получение токена как в документации. Сейчас токен прописан в коде - неправильный подход
+            return "6d9e2282cf9749603c8f6b4b010f300b0e7ef9a20faff87f592db94d8b8c25c3188ccac5fdbe32cdba9f4";
+
             string url = string.Format("https://oauth.vk.com/authorize?client_id={3}&display={0}&redirect_uri={1}&response_type=token&v={2}&scope={4}",
                 "page",
                 @"https://oauth.vk.com/blank.html",

@@ -79,7 +79,8 @@ namespace turizm.Lib.DB
         /// <summary>
         /// закрывает базу данных
         /// </summary>
-        public void Close() {
+        public void Close()
+        {
             connection.Close();
         }
 
@@ -357,16 +358,30 @@ namespace turizm.Lib.DB
         /// <returns></returns>
         protected string ExecuteSingle(string com)
         {
+            bool need_close = false;
+
+            //открываем соединение, если надо
+            if (connection.State != System.Data.ConnectionState.Open)
+            {
+                connection.Open();
+                need_close = true;
+            }
             SQLiteCommand cmd = connection.CreateCommand();
             cmd.CommandText = com;
             SQLiteDataReader dr = cmd.ExecuteReader();
             bool ff = dr.Read();
+            string res = "";
             if (ff)
             {
-                string res = dr[0].ToString();
-                return res.ToString();
+                string resA = dr[0].ToString();
+                res = resA.ToString();
             }
-            else return "";
+
+            //если открывали соединение, то надо закрыть
+            if (need_close)
+                connection.Close();
+
+            return res;
         }
 
     }

@@ -8,6 +8,9 @@ using System.Windows.Forms;
 
 namespace turizm.Lib
 {
+    /// <summary>
+    /// настройки приложения
+    /// </summary>
     public class Options
     {
         /// <summary>
@@ -16,15 +19,18 @@ namespace turizm.Lib
         public Options()
         {
             ApplicationID = 6442889;
-            AccessToken = "6d9e2282cf9749603c8f6b4b010f300b0e7ef9a20faff87f592db94d8b8c25c3188ccac5fdbe32cdba9f4";
             DatabaseFileName = "db.sqlite";
+            AccessToken = null;
             Topics = new List<string>()
             {
                 //vk.com group_id     topic_id
                 "https://vk.com/topic-14897324_24801958",
                 "https://vk.com/topic-33445697_25808851",
                 "https://vk.com/topic-40062539_35535029",
-                "https://vk.com/topic-60394803_29506343"
+                "https://vk.com/topic-60394803_29506343",
+                "https://vk.com/topic-42365455_29275795",
+                "https://vk.com/topic-140629566_35003076",
+                "https://vk.com/topic-61009220_29225653"
             };
         }
 
