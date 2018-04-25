@@ -22,6 +22,9 @@ namespace turizm.Lib.VK
     /// </summary>
     public class VK : BaseHttp
     {
+        /// <summary>
+        /// апи контакта
+        /// </summary>
         private readonly VkApi api;
         private readonly Options options;
         private readonly CommentPrefilter prefilter;
