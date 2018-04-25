@@ -42,7 +42,7 @@ namespace turizm.Lib.Classes
         public long CommentID { get; set; }
 
         /// <summary>
-        /// компаратор для поиска максимального элемента
+        /// сравнение для поиска максимального элемента
         /// </summary>
         /// <param name="obj"></param>
         /// <returns></returns>

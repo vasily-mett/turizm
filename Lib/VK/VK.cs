@@ -42,6 +42,7 @@ namespace turizm.Lib.VK
         /// конструктор с настройками
         /// </summary>
         /// <param name="options"></param>
+        /// <param name="db"></param>
         public VK(Options options, CommentDatabase db)
         {
             this.options = options;
@@ -160,7 +161,7 @@ namespace turizm.Lib.VK
             if (total - offset > res.CountComents)
                 res.Add(GetCommentsFrom(t, res.Comments[res.CountComents - 1], callback));
 
-            //если был задан стартовый элемент, то надо удалить, а то он два раз добавляется
+            //если был задан стартовый элемент, то надо удалить, а то он два раза добавляется
             //да, ненаучно, но что делать)
             if (last_comm != null)
                 res.RemoveCommentAt(0);

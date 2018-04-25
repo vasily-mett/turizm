@@ -17,7 +17,7 @@ namespace turizm.Lib.Classes
         public long TopicID { get; set; }
 
         /// <summary>
-        /// навание
+        /// название
         /// </summary>
         public string Name { get; set; }
 

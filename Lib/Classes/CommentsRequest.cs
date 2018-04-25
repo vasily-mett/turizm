@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace turizm.Lib.Classes
 {
     /// <summary>
-    /// ответ сервера при запросе комментариев. (спосок коментов и список пользователей)
+    /// ответ сервера при запросе комментариев. (список комментов и список пользователей)
     /// </summary>
     public class CommentsResponse
     {

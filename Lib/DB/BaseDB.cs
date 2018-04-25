@@ -225,8 +225,6 @@ namespace turizm.Lib.DB
                 //users[i].LastName.Replace("\'", "")
                 //);
 
-
-
                 string com = string.Format("INSERT INTO '" + tb_users + @"' ('user_id','first_name','last_name') VALUES ('{0}','{1}','{2}');",
                users[i].UserID,
                users[i].FirstName.Replace("\'", ""),

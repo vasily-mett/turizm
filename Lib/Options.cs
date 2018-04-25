@@ -19,7 +19,7 @@ namespace turizm.Lib
         public Options()
         {
             ApplicationID = 6442889;
-            DatabaseFileName = "db.sqlite";
+            DatabaseFileName = "Turizm.sqlite";
             AccessToken = null;
             Topics = new List<string>()
             {

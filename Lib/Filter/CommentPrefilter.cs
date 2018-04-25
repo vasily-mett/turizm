@@ -45,7 +45,7 @@ namespace turizm.Lib.Filter
         }
 
         /// <summary>
-        /// проверяет подходит комментарий для добавления  в БД или нет
+        /// проверяет подходит комментарий для добавления в БД или нет
         /// </summary>
         /// <param name="comm"></param>
         /// <returns></returns>
