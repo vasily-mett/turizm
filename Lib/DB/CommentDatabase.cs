@@ -96,6 +96,18 @@ namespace turizm.Lib.DB
         }
 
         /// <summary>
+        /// поиск комментариев в базе данных
+        /// </summary>
+        /// <param name="find">слова, которые надо найти</param>
+        /// <param name="exclude">слова, которые не должны попадаться в результате</param>
+        /// <returns>список найденных комментариев</returns>
+        public List<Comment> FindComments(string[] find, string[] exclude)
+        {
+            //TODO: реализовать поиск коментариев по заданным фильтрам
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
         /// добавление пользователей в БД
         /// </summary>
         /// <param name="users"></param>

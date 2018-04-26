@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using turizm.Lib;
+using turizm.Lib.Classes;
 using turizm.Lib.DB;
 using turizm.Lib.Neuro;
 using turizm.Lib.VK;
@@ -20,6 +21,8 @@ namespace turizm
     public partial class FormMain : Form
     {
         Options options;
+        CommentDatabase db;
+        VK vk;
 
         /// <summary>
         /// конструктор, настройка внешнего вида
@@ -33,6 +36,9 @@ namespace turizm
                 ListViewItem item = new ListViewItem(link);
                 listViewTopics.Items.Add(item);
             }
+
+            db = new CommentDatabase(options.DatabaseFileName);
+            vk = new VK(options, db);
         }
 
         /// <summary>
@@ -45,8 +51,7 @@ namespace turizm
             NWeb web = new NWeb();
             web.test();
 
-            CommentDatabase db = new CommentDatabase(options.DatabaseFileName);
-            VK vk = new VK(options,db);
+
             labelProgress.Visible = true;
             vk.UpdateDB(db, options,labelProgress);
             db.Close();
@@ -56,6 +61,20 @@ namespace turizm
             labelTotalComments.Text = "Количество комментариев в базе: "+ db.TotalComments.ToString();
             labelTotalUsers.Text = "Количество пользователей в базе: " + db.TotalUsers.ToString();
 
+        }
+
+        /// <summary>
+        /// кнопка поиска
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void buttonFilter_Click(object sender, EventArgs e)
+        {
+            string[] find = textBoxFind.Text.Replace(" ","").Split(',');
+            string[] exclude = textBoxExclude.Text.Replace(" ", "").Split(',');
+            List<Comment> comments = db.FindComments(find,exclude);
+            FormShowComments fsc = new FormShowComments(comments);
+            fsc.Show(this);
         }
     }
 }

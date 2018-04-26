@@ -99,8 +99,7 @@ namespace turizm.Lib.Filter
         /// <returns></returns>
         private bool ContainsLink(Comment comm)
         {
-            //TODO: Уменьшить нагрузку на проц. (заменить регулярку на что-то ещё, не такое прожорливое)
-            
+            //TODO: Уменьшить нагрузку на проц. (заменить регулярку на что-то ещё, не такое прожорливое)         
             bool res = RegExpressionLink.IsMatch(comm.Text);
             return res;
         }
