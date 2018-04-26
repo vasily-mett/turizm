@@ -28,7 +28,7 @@ namespace turizm
         /// </summary>
         /// <param name="comments">список комментариев для вывода</param>
         public FormShowComments(List<Comment> comments)
-            :base()
+            :this()
         {
             this.comments = comments;
         }

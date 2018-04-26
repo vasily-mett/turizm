@@ -18,9 +18,13 @@ namespace turizm.Lib.DB
         /// <summary>
         /// общее количество комментариев в базе данных
         /// </summary>
-        public long TotalComments { get {
+        public long TotalComments
+        {
+            get
+            {
                 return base.Count(tb_comments);
-            } }
+            }
+        }
 
         /// <summary>
         /// общее количество пользователей в БД
@@ -101,10 +105,49 @@ namespace turizm.Lib.DB
         /// <param name="find">слова, которые надо найти</param>
         /// <param name="exclude">слова, которые не должны попадаться в результате</param>
         /// <returns>список найденных комментариев</returns>
-        public List<Comment> FindComments(string[] find, string[] exclude)
+        public List<Comment> FindComments(List<string> find, List<string> exclude)
         {
-            //TODO: реализовать поиск коментариев по заданным фильтрам
-            throw new NotImplementedException();
+            //find = new List<string>() { "да","вар" };
+            //exclude = new List<string>() { "нет", "барселон","80" };
+
+            if (find == null)
+                find = new List<string>();
+            if (exclude == null)
+                exclude = new List<string>();
+
+            bool need_inc = find.Count > 0;
+            bool need_exc = exclude.Count > 0;
+
+            //запрос вида SELECT * FROM (блок включения слов) WHERE (блок исключения слов)
+            //начало команды всегда одинаковое
+            string command = "SELECT * FROM ";
+
+            if (need_inc) //если есть, то искать, то добавляем блок включения слов
+            {
+                command += " ( ";
+                command += @" SELECT * FROM '" + tb_comments + "' WHERE ";
+                foreach (string fstr in find)
+                    command += @" comment_text LIKE '%" + fstr + "%' OR ";
+
+                command = command.Substring(0, command.Length - "OR ".Length); //удаляем последний OR
+                command += ") "; //закрываем блок
+            }
+            else
+                command += " '" + tb_comments + "'"; //если нет, то берем всю таблицу
+
+            if (need_exc) //если есть слова для исключения, то добавляем исключения
+            {
+                command += " WHERE ";
+                foreach (string estr in exclude)
+                    command += " comment_text NOT LIKE '%" + estr + "%'" + " AND ";
+
+                command = command.Substring(0, command.Length - "AND ".Length);
+            }
+            command += ";"; // в любом случае, завершаем команду ';'
+
+            List<Comment> comms = ExecuteCommentReader(command);
+
+            return comms;
         }
 
         /// <summary>

@@ -178,7 +178,7 @@ namespace turizm.Lib.DB
                 comments[i].CommentID,
                 comments[i].UserID,
                 comments[i].TopicID,
-                comments[i].Text,
+                comments[i].Text.ToLower(),
                 date,
                 comments[i].Likes
                 );

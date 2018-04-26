@@ -163,6 +163,7 @@
             this.Controls.Add(this.buttonUpdateDB);
             this.Name = "FormMain";
             this.Text = "Туризм";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FormMain_FormClosed);
             this.ResumeLayout(false);
             this.PerformLayout();
 

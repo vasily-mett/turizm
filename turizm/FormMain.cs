@@ -48,17 +48,12 @@ namespace turizm
         /// <param name="e"></param>
         private void buttonUpdateDB_Click(object sender, EventArgs e)
         {
-            NWeb web = new NWeb();
-            web.test();
-
-
             labelProgress.Visible = true;
-            vk.UpdateDB(db, options,labelProgress);
-            db.Close();
+            vk.UpdateDB(db, options, labelProgress);
             labelProgress.Visible = false;
             labelTotalComments.Visible = true;
             labelTotalUsers.Visible = true;
-            labelTotalComments.Text = "Количество комментариев в базе: "+ db.TotalComments.ToString();
+            labelTotalComments.Text = "Количество комментариев в базе: " + db.TotalComments.ToString();
             labelTotalUsers.Text = "Количество пользователей в базе: " + db.TotalUsers.ToString();
 
         }
@@ -70,11 +65,26 @@ namespace turizm
         /// <param name="e"></param>
         private void buttonFilter_Click(object sender, EventArgs e)
         {
-            string[] find = textBoxFind.Text.Replace(" ","").Split(',');
-            string[] exclude = textBoxExclude.Text.Replace(" ", "").Split(',');
-            List<Comment> comments = db.FindComments(find,exclude);
+            List<string> find;
+            List<string> exclude;
+
+            if (textBoxFind.Text.Trim().Length > 0)
+                find = textBoxFind.Text.Trim().ToLower().Replace(" ", "").Split(',').ToList();
+            else
+                find = null;
+            if (textBoxExclude.Text.Trim().Length > 0)
+                exclude = textBoxExclude.Text.Trim().ToLower().Replace(" ", "").Split(',').ToList();
+            else
+                exclude = null;
+
+            List<Comment> comments = db.FindComments(find, exclude);
             FormShowComments fsc = new FormShowComments(comments);
             fsc.Show(this);
+        }
+
+        private void FormMain_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            db.Close();
         }
     }
 }
