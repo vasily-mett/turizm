@@ -83,7 +83,6 @@ namespace turizm.Lib.DB
         public List<Topic> ParseTopicLinks(List<string> links)
         {
             List<Topic> res = new List<Topic>();
-
             foreach (string str in links)
             {
                 //https://vk.com/topic-60394803_29506343
@@ -94,9 +93,7 @@ namespace turizm.Lib.DB
                 long topic_id = long.Parse(ids1[1]);
                 res.Add(new Topic() { TopicID = topic_id, GroupID = group_id });
             }
-
             return res;
-
         }
 
         /// <summary>
@@ -146,7 +143,6 @@ namespace turizm.Lib.DB
             command += ";"; // в любом случае, завершаем команду ';'
 
             List<Comment> comms = ExecuteCommentReader(command);
-
             return comms;
         }
 

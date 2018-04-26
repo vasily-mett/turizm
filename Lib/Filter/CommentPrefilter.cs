@@ -27,7 +27,7 @@ namespace turizm.Lib.Filter
         {
             this.db = db;
         }
-        
+
         /// <summary>
         /// отсеивает комментарии для сохранения в БД
         /// </summary>
@@ -39,9 +39,24 @@ namespace turizm.Lib.Filter
 
             foreach (Comment comm in new_comments)
                 if (IsCommentMatch(comm))
-                    res.Add(comm);
+                    res.Add(PrepareComment(comm));
 
             return res;
+        }
+
+        /// <summary>
+        /// подготовка комментария перед добавлением в БД
+        /// </summary>
+        /// <param name="comm">комментарий</param>
+        /// <returns></returns>
+        private Comment PrepareComment(Comment comm)
+        {
+            //удаление ссылок вк (ответы, упоминания)
+            string text = comm.Text;
+            text = Regex.Replace(text, @"\[[^\)]+\]", "");
+            text = text.TrimStart(new char[2] { ',', ' ' });
+            comm.Text = text;
+            return comm;
         }
 
         /// <summary>
