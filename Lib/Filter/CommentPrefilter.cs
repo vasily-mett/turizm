@@ -36,11 +36,9 @@ namespace turizm.Lib.Filter
         internal List<Comment> Prefilter(List<Comment> new_comments)
         {
             List<Comment> res = new List<Comment>();
-
             foreach (Comment comm in new_comments)
                 if (IsCommentMatch(comm))
                     res.Add(PrepareComment(comm));
-
             return res;
         }
 

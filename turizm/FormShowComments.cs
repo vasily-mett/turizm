@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using turizm.Lib.Classes;
+using turizm.Lib.DB;
 
 namespace turizm
 {
@@ -17,6 +18,7 @@ namespace turizm
     public partial class FormShowComments : Form
     {
         private List<Comment> comments;
+        private CommentDatabase db;
 
         private FormShowComments()
         {
@@ -27,10 +29,11 @@ namespace turizm
         /// создает окно вывода списка комментариев
         /// </summary>
         /// <param name="comments">список комментариев для вывода</param>
-        public FormShowComments(List<Comment> comments)
-            :this()
+        public FormShowComments(List<Comment> comments, CommentDatabase db)
+            : this()
         {
-            this.comments = comments!=null?comments:new List<Comment>();
+            this.comments = comments != null ? comments : new List<Comment>();
+            this.db = db;
         }
 
         /// <summary>
@@ -62,7 +65,14 @@ namespace turizm
             if (dataGridViewComments.SelectedCells.Count > 0)
             {
                 int ind = dataGridViewComments.SelectedCells[0].RowIndex;
-                textBoxCommentText.Text = comments[ind].Text;
+                if (ind < comments.Count)
+                {
+                    Comment comm = comments[ind];
+                    textBoxCommentText.Text = comm.Text;
+                    labelLikes.Text = "Количество лайков: " + comm.Likes.ToString();
+                    User user = db.GetUser(comm.UserID);
+                    labelName.Text = "Пользователь: " + user.FirstName + " " + user.LastName;
+                }
             }
         }
     }

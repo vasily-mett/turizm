@@ -76,6 +76,20 @@ namespace turizm.Lib.DB
         }
 
         /// <summary>
+        /// получить информацию о пользователе по заданному ID
+        /// </summary>
+        /// <param name="userID">ID пользователя</param>
+        /// <returns></returns>
+        public User GetUser(long userID)
+        {
+            List<User> uss = base.ExecuteUserReader("SELECT * FROM '" + tb_users + "' WHERE user_id=" + userID);
+            if (uss.Count > 0)
+                return uss[0];
+            else
+                return null;
+        }
+
+        /// <summary>
         /// преобразование текстовых ссылок в массив объектов Topic
         /// </summary>
         /// <param name="links"></param>

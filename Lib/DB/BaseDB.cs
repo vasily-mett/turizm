@@ -157,8 +157,6 @@ namespace turizm.Lib.DB
                     );
             }
             ExecuteQuery(com);
-
-            //List<Comment> test = ExecuteCommentReader("SELECT * FROM 'tb_comments'");
         }
 
         /// <summary>
@@ -218,18 +216,10 @@ namespace turizm.Lib.DB
             for (int i = 0; i < users.Count; i++)
             {
                 SQLiteCommand cm = connection.CreateCommand();
-
-                //string com = string.Format("UPDATE OR IGNORE '" + tb_users + @"' SET user_id={0},first_name='{1}',last_name='{2}'",
-                //users[i].UserID,
-                //users[i].FirstName.Replace("\'",""),
-                //users[i].LastName.Replace("\'", "")
-                //);
-
                 string com = string.Format("INSERT INTO '" + tb_users + @"' ('user_id','first_name','last_name') VALUES ('{0}','{1}','{2}');",
-               users[i].UserID,
-               users[i].FirstName.Replace("\'", ""),
-               users[i].LastName.Replace("\'", ""));
-
+                users[i].UserID,
+                users[i].FirstName.Replace("\'", ""),
+                users[i].LastName.Replace("\'", ""));
                 cm.CommandText = com;
                 cm.ExecuteNonQuery();
             }
@@ -291,7 +281,7 @@ namespace turizm.Lib.DB
         /// </summary>
         /// <param name="com">команда SQL</param>
         /// <returns></returns>
-        private List<User> ExecuteUserReader(string com)
+        protected List<User> ExecuteUserReader(string com)
         {
 
             SQLiteCommand cmd = connection.CreateCommand();

@@ -78,7 +78,7 @@ namespace turizm
                 exclude = null;
 
             List<Comment> comments = db.FindComments(find, exclude);
-            FormShowComments fsc = new FormShowComments(comments);
+            FormShowComments fsc = new FormShowComments(comments, db);
             fsc.Show(this);
         }
 
