@@ -87,13 +87,12 @@ namespace turizm
         {
             if (dataGridViewComments.RowCount > 0 && dataGridViewComments.ColumnCount > 0 && comments.Count > 0)
             {
-                int i = 0;
-                foreach (DataGridViewRow dgvr in dataGridViewComments.Rows)
+                for (int i=0;i< dataGridViewComments.Rows.Count;i++)
                 {
                     Comment tf = comments[i];
                     if (tf.AdvertWordsCount > 0)
                     {
-                        DataGridViewCell cell = dgvr.Cells[0];
+                        DataGridViewCell cell = dataGridViewComments.Rows[i].Cells[0];
                         cell.Style = new DataGridViewCellStyle() { BackColor = Color.Yellow };
                     }
                     i++;
