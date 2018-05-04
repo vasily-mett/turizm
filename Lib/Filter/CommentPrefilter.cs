@@ -83,6 +83,7 @@ namespace turizm.Lib.Filter
         /// <returns></returns>
         static public bool checkMask(string text, string mask)
         {
+            //TODO: Здесь надо избавиться от регулярки
             string[] exts = mask.Split('|', ',', ';');
             string pattern = string.Empty;
             foreach (string ext in exts)
@@ -100,6 +101,7 @@ namespace turizm.Lib.Filter
             }
             if (pattern.Length == 0) return false;
             pattern = pattern.Remove(pattern.Length - 1);
+
             Regex regex = new Regex(pattern, RegexOptions.IgnoreCase);
             return regex.IsMatch(text);
         }
