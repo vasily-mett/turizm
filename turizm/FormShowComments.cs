@@ -53,6 +53,7 @@ namespace turizm
             }
             dataGridViewComments.DataSource = dt;
             dataGridViewComments.Columns[0].Width = 200;
+            labelTotalComments.Text = "Найдено комментариев: " + comments.Count;
         }
 
         /// <summary>

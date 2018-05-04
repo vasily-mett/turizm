@@ -39,7 +39,11 @@ namespace turizm
 
             db = new CommentDatabase(options.DatabaseFileName);
             vk = new VK(options, db);
-        }
+            labelTotalComments.Visible = true;
+            labelTotalUsers.Visible = true;
+            labelTotalComments.Text = "Количество комментариев в базе: " + db.TotalComments.ToString();
+            labelTotalUsers.Text = "Количество пользователей в базе: " + db.TotalUsers.ToString();
+                    }
 
         /// <summary>
         /// кнопка обновить БД
