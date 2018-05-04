@@ -14,7 +14,7 @@ namespace turizm.Lib.Filter
     /// <summary>
     /// обработка комментариев до занесения в БД (отсев спама, коротких  коментов)
     /// </summary>
-    class CommentPrefilter
+    public class CommentPrefilter
     {
         private readonly CommentDatabase db;
         private readonly Regex RegExpressionLink = new Regex(@"w*(https?:\/\/)?([\w\.]+)\.([a-z]{2,6}\.?)(\/[\w\.]*)*\/?w*");
@@ -56,8 +56,15 @@ namespace turizm.Lib.Filter
             text = Regex.Replace(text, @"\[[^\)]+\]", "");
             text = text.TrimStart(new char[2] { ',', ' ' });
             comm.Text = text;
-            comm.AdvertWordsCount = CountAdvertWords(comm.Text);
             return comm;
+        }
+
+
+        public List<Comment> CountAdvertWords(List<Comment> comments)
+        {
+                       foreach (Comment comm in comments)
+                comm.AdvertWordsCount = CountAdvertWords(comm.Text);
+            return comments;
         }
 
         /// <summary>
@@ -69,7 +76,8 @@ namespace turizm.Lib.Filter
         {
             int res = 0;
             foreach (AdvWord kw in words)
-                if (checkMask(text,kw.Word))
+                //if (checkMask(text,kw.Word))
+                if (new Regex(kw.Word).IsMatch(text))
                     res++;
             return res;
 

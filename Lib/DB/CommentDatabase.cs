@@ -56,7 +56,7 @@ namespace turizm.Lib.DB
         /// загрузить список рекламных слов
         /// </summary>
         /// <param name="advertKeywordsFileName">адрес файла с рекламными словами</param>
-        internal void LoadAdvertKw(string advertKeywordsFileName)
+        public void LoadAdvertKw(string advertKeywordsFileName)
         {
             //чтение файла
             StreamReader sr = new StreamReader(advertKeywordsFileName);
@@ -73,6 +73,7 @@ namespace turizm.Lib.DB
             foreach (AdvWord wd in lines)
                 this.AddObject(wd);
         }
+
 
         /// <summary>
         /// добавление строки в таблицу обсуждений 

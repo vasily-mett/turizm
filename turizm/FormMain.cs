@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using turizm.Lib;
 using turizm.Lib.Classes;
 using turizm.Lib.DB;
+using turizm.Lib.Filter;
 using turizm.Lib.Neuro;
 using turizm.Lib.VK;
 using VkNet;
@@ -70,6 +71,7 @@ namespace turizm
         {
             List<string> find;
             List<string> exclude;
+            
 
             if (textBoxFind.Text.Trim().Length > 0)
                 find = textBoxFind.Text.Trim().ToLower().Replace(" ", "").Split(',').ToList();
@@ -79,8 +81,9 @@ namespace turizm
                 exclude = textBoxExclude.Text.Trim().ToLower().Replace(" ", "").Split(',').ToList();
             else
                 exclude = null;
-
+            db.LoadAdvertKw(options.AdvertKeywordsFileName);
             List<Comment> comments = db.FindComments(find, exclude);
+            comments = new CommentPrefilter(db).CountAdvertWords(comments);
             FormShowComments fsc = new FormShowComments(comments, db);
             fsc.Show(this);
         }
