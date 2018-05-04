@@ -48,6 +48,7 @@ namespace turizm.Lib.VK
             this.options = options;
             this.db = db;
             api = new VkApi();
+            db.LoadAdvertKw(options.AdvertKeywordsFileName);
             prefilter = new CommentPrefilter(db);
             options.AccessToken = GetToken(options.ApplicationID);
             ApiAuthParams par = new ApiAuthParams
@@ -80,12 +81,12 @@ namespace turizm.Lib.VK
                 Comment last_comm = database.GetLastComment(t);
                 CommentsResponse response = GetCommentsFrom(t, last_comm, (perc) =>
                 {
-                    string status = "Обработка обсуждения " + (i+1) + "/" + topics.Count + ", завершено " + perc.ToString("0.0") + "%";
+                    string status = "Обработка обсуждения " + (i + 1) + "/" + topics.Count + ", завершено " + perc.ToString("0.0") + "%";
                     labelProgress.Text = status;
                     Application.DoEvents();
                 });
 
-                labelProgress.Text = "Обработка обсуждения " + (i+1) + "/" + topics.Count + ", обработка результатов"; Application.DoEvents();
+                labelProgress.Text = "Обработка обсуждения " + (i + 1) + "/" + topics.Count + ", обработка результатов"; Application.DoEvents();
                 database.AddUsers(response.Users);
 
                 List<Comment> filtered_comments = prefilter.Prefilter(response.Comments);

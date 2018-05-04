@@ -97,6 +97,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Classes\AdvWord.cs" />
     <Compile Include="Classes\Comment.cs" />
     <Compile Include="Classes\CommentsRequest.cs" />
     <Compile Include="Classes\Topic.cs" />
@@ -120,7 +121,9 @@
     <Analyzer Include="..\packages\SonarAnalyzer.CSharp.6.8.2.4717\analyzers\SonarAnalyzer.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="advert.txt" />
+    <Content Include="advert.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="negative.txt" />
     <Content Include="positive.txt" />
   </ItemGroup>

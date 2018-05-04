@@ -37,7 +37,7 @@ namespace turizm
                 listViewTopics.Items.Add(item);
             }
 
-            db = new CommentDatabase(options.DatabaseFileName);
+            db = new CommentDatabase(options);
             vk = new VK(options, db);
             labelTotalComments.Visible = true;
             labelTotalUsers.Visible = true;
@@ -59,7 +59,6 @@ namespace turizm
             labelTotalUsers.Visible = true;
             labelTotalComments.Text = "Количество комментариев в базе: " + db.TotalComments.ToString();
             labelTotalUsers.Text = "Количество пользователей в базе: " + db.TotalUsers.ToString();
-
         }
 
         /// <summary>

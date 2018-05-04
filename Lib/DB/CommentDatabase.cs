@@ -35,10 +35,11 @@ namespace turizm.Lib.DB
         /// открывает базу данных, если файла не существует, то создает пустой
         /// </summary>
         /// <param name="options"></param>
-        public CommentDatabase(string databaseFolder)
-            : base(databaseFolder)
+        public CommentDatabase(Options options)
+            : base(options.DatabaseFileName)
         {
             OpenDB();
+            LoadAdvertKw(options.AdvertKeywordsFileName);
         }
 
         /// <summary>
@@ -52,6 +53,28 @@ namespace turizm.Lib.DB
         }
 
         /// <summary>
+        /// загрузить список рекламных слов
+        /// </summary>
+        /// <param name="advertKeywordsFileName">адрес файла с рекламными словами</param>
+        internal void LoadAdvertKw(string advertKeywordsFileName)
+        {
+            //чтение файла
+            StreamReader sr = new StreamReader(advertKeywordsFileName);
+            List<AdvWord> lines = new List<AdvWord>();
+            while (!sr.EndOfStream)
+            {
+                string line = sr.ReadLine();
+                lines.Add(new AdvWord() { Word = line });
+            }
+            sr.Close();
+
+            //заполнение БД
+            this.ClearTable(tb_advert);
+            foreach (AdvWord wd in lines)
+                this.AddObject(wd);
+        }
+
+        /// <summary>
         /// добавление строки в таблицу обсуждений 
         /// </summary>
         /// <param name="t"></param>
@@ -61,6 +84,15 @@ namespace turizm.Lib.DB
                 return;
             if (!TopicExists(t.TopicID))
                 AddObject(t);
+        }
+
+        /// <summary>
+        /// Получить список рекламных слов 
+        /// </summary>
+        /// <returns></returns>
+        internal List<AdvWord> GetAdvKeywords()
+        {
+            return base.ExecuteAdvertReader("SELECT * FROM " + tb_advert);
         }
 
         /// <summary>

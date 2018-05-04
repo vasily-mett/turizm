@@ -14,7 +14,6 @@ namespace turizm.Lib.DB
     /// </summary>
     public class BaseDB
     {
-
         private string connectionString;
         private readonly SQLiteConnection connection;
         private readonly string FileName;
@@ -22,6 +21,7 @@ namespace turizm.Lib.DB
         public const string tb_topics = "tb_topics";
         public const string tb_comments = "tb_comments";
         public const string tb_users = "tb_users";
+        public const string tb_advert = "tb_advert";
 
         /// <summary>
         /// подсчет количества строк в заданной таблице
@@ -84,6 +84,8 @@ namespace turizm.Lib.DB
             connection.Close();
         }
 
+
+
         /// <summary>
         /// создание пустой базы данных
         /// </summary>
@@ -109,6 +111,7 @@ namespace turizm.Lib.DB
                 topic_id INTEGER NOT NULL,
                 comment_text TEXT,
                 comment_date INTEGER,
+                comment_advkw INTEGER,
                 comment_likes INTEGER);";
             commCreate.ExecuteNonQuery();
 
@@ -116,6 +119,12 @@ namespace turizm.Lib.DB
                 (user_id INTEGER PRIMARY KEY NOT NULL,
                 first_name TEXT,
                 last_name TEXT);";
+            commCreate.ExecuteNonQuery();
+
+            commCreate.CommandText = @"CREATE TABLE " + tb_advert + @" 
+                (id INTEGER PRIMARY KEY AUTOINCREMENT,
+                word TEXT,
+                hash TEXT);";
             commCreate.ExecuteNonQuery();
 
             con.Close();
@@ -137,14 +146,14 @@ namespace turizm.Lib.DB
                 Comment comment = obj as Comment;
                 comment.Text = comment.Text.Replace("'", "");
                 long date = (int)(comment.Date - new DateTime(1970, 1, 1)).TotalSeconds;
-                com = string.Format("INSERT INTO '" + tb_comments + @"' ('comment_id','user_id','topic_id','comment_text','comment_date','comment_likes') VALUES ('{0}','{1}','{2}','{3}','{4}','{5}');",
-                    comment.CommentID,
-                    comment.UserID,
-                    comment.TopicID,
-                    comment.Text,
-                    date,
-                    comment.Likes
-                    );
+                com = string.Format("INSERT INTO '" + tb_comments + @"' ('comment_id','user_id','topic_id','comment_text','comment_date','comment_likes','comment_advkw') VALUES ('{0}','{1}','{2}','{3}','{4}','{5}','{6}');",
+                comment.CommentID,
+                comment.UserID,
+                comment.TopicID,
+                comment.Text.ToLower(),
+                date,
+                comment.Likes,
+                comment.AdvertWordsCount);
             }
             else if (obj is Topic)
             {
@@ -154,6 +163,15 @@ namespace turizm.Lib.DB
                     topic.TopicID,
                     topic.GroupID,
                     string.IsNullOrEmpty(topic.Name) ? "noname" : topic.Name
+                    );
+            }
+            else if (obj is AdvWord)
+            {
+                //добавление рекламного слова в таблицу
+                AdvWord word = obj as AdvWord;
+                com = string.Format("INSERT INTO '" + tb_advert + @"' ('word','hash') VALUES ('{0}','{1}');",
+                    word.Word,
+                    word.Hash
                     );
             }
             ExecuteQuery(com);
@@ -172,13 +190,14 @@ namespace turizm.Lib.DB
 
                 comments[i].Text = comments[i].Text.Replace("'", "");
                 long date = (int)(comments[i].Date - new DateTime(1970, 1, 1)).TotalSeconds;
-                string com = string.Format("INSERT INTO '" + tb_comments + @"' ('comment_id','user_id','topic_id','comment_text','comment_date','comment_likes') VALUES ('{0}','{1}','{2}','{3}','{4}','{5}');",
+                string com = string.Format("INSERT INTO '" + tb_comments + @"' ('comment_id','user_id','topic_id','comment_text','comment_date','comment_likes','comment_advkw') VALUES ('{0}','{1}','{2}','{3}','{4}','{5}','{6}');",
                 comments[i].CommentID,
                 comments[i].UserID,
                 comments[i].TopicID,
                 comments[i].Text.ToLower(),
                 date,
-                comments[i].Likes
+                comments[i].Likes,
+                comments[i].AdvertWordsCount
                 );
 
                 cm.CommandText = com;
@@ -261,6 +280,7 @@ namespace turizm.Lib.DB
                 long topic_id = Convert.ToInt64(dr["topic_id"]);
                 string text = dr["comment_text"] is DBNull ? "" : dr["comment_text"].ToString();
                 long likes = dr["comment_likes"] is DBNull ? 0 : Convert.ToInt64(dr["comment_likes"]);
+                int advk = dr["comment_advkw"] is DBNull ? 0 : Convert.ToInt32(dr["comment_advkw"]);
                 res.Add(new Comment()
                 {
                     CommentID = com_id,
@@ -268,7 +288,8 @@ namespace turizm.Lib.DB
                     TopicID = topic_id,
                     Text = text,
                     Date = parsed_date,
-                    Likes = likes
+                    Likes = likes,
+                    AdvertWordsCount = advk
                 });
             }
 
@@ -315,7 +336,6 @@ namespace turizm.Lib.DB
         /// <returns></returns>
         protected List<Topic> ExecuteTopicReader(string com)
         {
-
             SQLiteCommand cmd = connection.CreateCommand();
             cmd.CommandText = com;
             SQLiteDataReader dr = cmd.ExecuteReader();
@@ -336,7 +356,33 @@ namespace turizm.Lib.DB
             }
 
             return res;
+        }
 
+        /// <summary>
+        /// выполнение запроса с результатом в виде списка рекламных слов
+        /// </summary>
+        /// <param name="com">команда SQL</param>
+        /// <returns></returns>
+        internal List<AdvWord> ExecuteAdvertReader(string com)
+        {
+            SQLiteCommand cmd = connection.CreateCommand();
+            cmd.CommandText = com;
+            SQLiteDataReader dr = cmd.ExecuteReader();
+
+            List<AdvWord> res = new List<AdvWord>();
+
+            while (dr.Read())
+            {
+                int id = Convert.ToInt32(dr["id"]);
+                string word = dr["word"] is DBNull ? "" : dr["word"].ToString();
+                res.Add(new AdvWord()
+                {
+                    ID = id,
+                    Word = word
+                });
+            }
+
+            return res;
         }
 
         /// <summary>
@@ -370,6 +416,17 @@ namespace turizm.Lib.DB
                 connection.Close();
 
             return res;
+        }
+
+        /// <summary>
+        /// очистка заданной таблицы
+        /// </summary>
+        /// <param name="table">имя таблицы</param>
+        protected void ClearTable(string table)
+        {
+            SQLiteCommand cmd = connection.CreateCommand();
+            cmd.CommandText = "DELETE FROM " + table;
+            cmd.ExecuteNonQuery();
         }
 
     }

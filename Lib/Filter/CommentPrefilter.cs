@@ -18,6 +18,7 @@ namespace turizm.Lib.Filter
     {
         private readonly CommentDatabase db;
         private readonly Regex RegExpressionLink = new Regex(@"w*(https?:\/\/)?([\w\.]+)\.([a-z]{2,6}\.?)(\/[\w\.]*)*\/?w*");
+        List<AdvWord> words;
 
         /// <summary>
         /// создает новый экземпляр фильтра комментариев
@@ -26,10 +27,11 @@ namespace turizm.Lib.Filter
         public CommentPrefilter(CommentDatabase db)
         {
             this.db = db;
+            words = db.GetAdvKeywords();
         }
 
         /// <summary>
-        /// отсеивает комментарии для сохранения в БД
+        /// отсеивает комментарии для сохранения в БД и записывает количество рекламных слов в тексте комментария
         /// </summary>
         /// <param name="new_comments">скачанные комментарии</param>
         /// <returns>комментарии, которые надо добавлять в БД</returns>
@@ -43,7 +45,7 @@ namespace turizm.Lib.Filter
         }
 
         /// <summary>
-        /// подготовка комментария перед добавлением в БД
+        /// подготовка комментария перед добавлением в БД (удаление ссылок на страницы ВК, посчет рекламных слов в тексте)
         /// </summary>
         /// <param name="comm">комментарий</param>
         /// <returns></returns>
@@ -54,7 +56,52 @@ namespace turizm.Lib.Filter
             text = Regex.Replace(text, @"\[[^\)]+\]", "");
             text = text.TrimStart(new char[2] { ',', ' ' });
             comm.Text = text;
+            comm.AdvertWordsCount = CountAdvertWords(comm.Text);
             return comm;
+        }
+
+        /// <summary>
+        /// возвращает количество рекламных слов в заданном тексте
+        /// </summary>
+        /// <param name="text">текст</param>
+        /// <returns></returns>
+        private int CountAdvertWords(string text)
+        {
+            int res = 0;
+            foreach (AdvWord kw in words)
+                if (checkMask(text,kw.Word))
+                    res++;
+            return res;
+
+        }
+
+        /// <summary>
+        /// проверка текста на соответствие маске
+        /// </summary>
+        /// <param name="text"></param>
+        /// <param name="mask"></param>
+        /// <returns></returns>
+        static public bool checkMask(string text, string mask)
+        {
+            string[] exts = mask.Split('|', ',', ';');
+            string pattern = string.Empty;
+            foreach (string ext in exts)
+            {
+                pattern += @"^";//признак начала строки
+                foreach (char symbol in ext)
+                    switch (symbol)
+                    {
+                        case '.': pattern += @"\."; break;
+                        case '?': pattern += @"."; break;
+                        case '*': pattern += @".*"; break;
+                        default: pattern += symbol; break;
+                    }
+                pattern += @"$|";//признак окончания строки
+            }
+            if (pattern.Length == 0) return false;
+            pattern = pattern.Remove(pattern.Length - 1);
+            Regex regex = new Regex(pattern, RegexOptions.IgnoreCase);
+            return regex.IsMatch(text);
         }
 
         /// <summary>

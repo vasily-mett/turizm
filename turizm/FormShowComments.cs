@@ -71,8 +71,32 @@ namespace turizm
                     Comment comm = comments[ind];
                     textBoxCommentText.Text = comm.Text;
                     labelLikes.Text = "Количество лайков: " + comm.Likes.ToString();
+                    labelAdv.Text = "Количество рекламных слов: " + comm.AdvertWordsCount.ToString();
                     User user = db.GetUser(comm.UserID);
                     labelName.Text = "Пользователь: " + user.FirstName + " " + user.LastName;
+                }
+            }
+        }
+
+        /// <summary>
+        /// закрашивание рекламных 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void dataGridViewComments_Paint(object sender, PaintEventArgs e)
+        {
+            if (dataGridViewComments.RowCount > 0 && dataGridViewComments.ColumnCount > 0 && comments.Count > 0)
+            {
+                int i = 0;
+                foreach (DataGridViewRow dgvr in dataGridViewComments.Rows)
+                {
+                    Comment tf = comments[i];
+                    if (tf.AdvertWordsCount > 0)
+                    {
+                        DataGridViewCell cell = dgvr.Cells[0];
+                        cell.Style = new DataGridViewCellStyle() { BackColor = Color.Yellow };
+                    }
+                    i++;
                 }
             }
         }

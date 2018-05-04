@@ -20,6 +20,7 @@ namespace turizm.Lib
         {
             ApplicationID = 6442889;
             DatabaseFileName = "Turizm.sqlite";
+            AdvertKeywordsFileName = "advert.txt";
             AccessToken = null;
             Topics = new List<string>()
             {
@@ -58,5 +59,15 @@ namespace turizm.Lib
         /// имя файла базы данных
         /// </summary>
         public string DatabaseFileName { get { return Application.StartupPath + "\\" + databaseFileName; } set { databaseFileName = Path.GetFileName(value); } }
+
+        /// <summary>
+        /// имя файла с рекламными словами
+        /// </summary>
+        private string advertKeywordsFileName;
+
+        /// <summary>
+        /// адрес файла с рекламными словами
+        /// </summary>
+        public string AdvertKeywordsFileName { get { return Application.StartupPath + "\\" + advertKeywordsFileName; } set { advertKeywordsFileName = Path.GetFileName(value); } }
     }
 }

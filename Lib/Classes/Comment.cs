@@ -11,6 +11,11 @@ namespace turizm.Lib.Classes
     /// </summary>
     public class Comment : IComparable
     {
+        public Comment()
+        {
+            this.AdvertWordsCount = -1;
+        }
+
         /// <summary>
         /// ID обсуждения
         /// </summary>
@@ -40,6 +45,11 @@ namespace turizm.Lib.Classes
         /// ID комментария
         /// </summary>
         public long CommentID { get; set; }
+
+        /// <summary>
+        /// количество рекламных слов в тексте комментарии. Если значение неизвестно, то -1
+        /// </summary>
+        public int AdvertWordsCount { get; set; }
 
         /// <summary>
         /// сравнение для поиска максимального элемента
