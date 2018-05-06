@@ -13,7 +13,7 @@ namespace turizm.Lib.Classes
     {
         public Comment()
         {
-            this.AdvertWordsCount = -1;
+            this.AdvertMasks = new List<string>();
         }
 
         /// <summary>
@@ -39,7 +39,7 @@ namespace turizm.Lib.Classes
         /// <summary>
         /// количество лайков у комментария
         /// </summary>
-        public long Likes { get; set; }
+        public int Likes { get; set; }
 
         /// <summary>
         /// ID комментария
@@ -47,9 +47,9 @@ namespace turizm.Lib.Classes
         public long CommentID { get; set; }
 
         /// <summary>
-        /// количество рекламных слов в тексте комментарии. Если значение неизвестно, то -1
+        /// количество рекламных масок в комментарии
         /// </summary>
-        public int AdvertWordsCount { get; set; }
+        public List<string> AdvertMasks { get; set; }
 
         /// <summary>
         /// сравнение для поиска максимального элемента

@@ -129,7 +129,7 @@ namespace turizm.Lib.VK
                 long from_id = long.Parse(item["from_id"].ToString());
                 long date = long.Parse(item["date"].ToString());
                 string text = item["text"].ToString();
-                long likes = long.Parse(item["likes"]["count"].ToString());
+                int likes = int.Parse(item["likes"]["count"].ToString());
                 DateTime parsed_date = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc).AddSeconds(date);
                 res.Add(new Comment() { CommentID = comment_id, Likes = likes, Text = text, TopicID = t.TopicID, UserID = from_id, Date = parsed_date });
             }

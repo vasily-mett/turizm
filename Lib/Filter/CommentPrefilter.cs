@@ -59,59 +59,32 @@ namespace turizm.Lib.Filter
             return comm;
         }
 
-
+        /// <summary>
+        /// для каждого комментария в списке записывает список рекламных масок, под которые подходит текст
+        /// </summary>
+        /// <param name="comments"></param>
+        /// <returns></returns>
         public List<Comment> CountAdvertWords(List<Comment> comments)
         {
-                       foreach (Comment comm in comments)
-                comm.AdvertWordsCount = CountAdvertWords(comm.Text);
+            foreach (Comment comm in comments)
+                comm.AdvertMasks = CountAdvertWords(comm.Text);
             return comments;
         }
 
         /// <summary>
-        /// возвращает количество рекламных слов в заданном тексте
+        /// возвращает список рекламных масок в заданном тексте
         /// </summary>
         /// <param name="text">текст</param>
         /// <returns></returns>
-        private int CountAdvertWords(string text)
+        private List<string> CountAdvertWords(string text)
         {
-            int res = 0;
+            List<string> res = new List<string>();
             foreach (AdvWord kw in words)
                 //if (checkMask(text,kw.Word))
                 if (new Regex(kw.Word).IsMatch(text))
-                    res++;
+                    res.Add(kw.Word);
             return res;
 
-        }
-
-        /// <summary>
-        /// проверка текста на соответствие маске
-        /// </summary>
-        /// <param name="text"></param>
-        /// <param name="mask"></param>
-        /// <returns></returns>
-        static public bool checkMask(string text, string mask)
-        {
-            //TODO: Здесь надо избавиться от регулярки
-            string[] exts = mask.Split('|', ',', ';');
-            string pattern = string.Empty;
-            foreach (string ext in exts)
-            {
-                pattern += @"^";//признак начала строки
-                foreach (char symbol in ext)
-                    switch (symbol)
-                    {
-                        case '.': pattern += @"\."; break;
-                        case '?': pattern += @"."; break;
-                        case '*': pattern += @".*"; break;
-                        default: pattern += symbol; break;
-                    }
-                pattern += @"$|";//признак окончания строки
-            }
-            if (pattern.Length == 0) return false;
-            pattern = pattern.Remove(pattern.Length - 1);
-
-            Regex regex = new Regex(pattern, RegexOptions.IgnoreCase);
-            return regex.IsMatch(text);
         }
 
         /// <summary>

@@ -88,6 +88,7 @@
             // labelAdv
             // 
             this.labelAdv.AutoSize = true;
+            this.labelAdv.Cursor = System.Windows.Forms.Cursors.Help;
             this.labelAdv.Location = new System.Drawing.Point(308, 211);
             this.labelAdv.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.labelAdv.Name = "labelAdv";

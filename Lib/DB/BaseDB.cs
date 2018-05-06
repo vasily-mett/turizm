@@ -146,14 +146,13 @@ namespace turizm.Lib.DB
                 Comment comment = obj as Comment;
                 comment.Text = comment.Text.Replace("'", "");
                 long date = (int)(comment.Date - new DateTime(1970, 1, 1)).TotalSeconds;
-                com = string.Format("INSERT INTO '" + tb_comments + @"' ('comment_id','user_id','topic_id','comment_text','comment_date','comment_likes','comment_advkw') VALUES ('{0}','{1}','{2}','{3}','{4}','{5}','{6}');",
+                com = string.Format("INSERT INTO '" + tb_comments + @"' ('comment_id','user_id','topic_id','comment_text','comment_date','comment_likes') VALUES ('{0}','{1}','{2}','{3}','{4}','{5}');",
                 comment.CommentID,
                 comment.UserID,
                 comment.TopicID,
                 comment.Text.ToLower(),
                 date,
-                comment.Likes,
-                comment.AdvertWordsCount);
+                comment.Likes);
             }
             else if (obj is Topic)
             {
@@ -190,14 +189,13 @@ namespace turizm.Lib.DB
 
                 comments[i].Text = comments[i].Text.Replace("'", "");
                 long date = (int)(comments[i].Date - new DateTime(1970, 1, 1)).TotalSeconds;
-                string com = string.Format("INSERT INTO '" + tb_comments + @"' ('comment_id','user_id','topic_id','comment_text','comment_date','comment_likes','comment_advkw') VALUES ('{0}','{1}','{2}','{3}','{4}','{5}','{6}');",
+                string com = string.Format("INSERT INTO '" + tb_comments + @"' ('comment_id','user_id','topic_id','comment_text','comment_date','comment_likes') VALUES ('{0}','{1}','{2}','{3}','{4}','{5}');",
                 comments[i].CommentID,
                 comments[i].UserID,
                 comments[i].TopicID,
                 comments[i].Text.ToLower(),
                 date,
-                comments[i].Likes,
-                comments[i].AdvertWordsCount
+                comments[i].Likes
                 );
 
                 cm.CommandText = com;
@@ -279,8 +277,7 @@ namespace turizm.Lib.DB
                 long user_id = Convert.ToInt64(dr["user_id"]);
                 long topic_id = Convert.ToInt64(dr["topic_id"]);
                 string text = dr["comment_text"] is DBNull ? "" : dr["comment_text"].ToString();
-                long likes = dr["comment_likes"] is DBNull ? 0 : Convert.ToInt64(dr["comment_likes"]);
-                int advk = dr["comment_advkw"] is DBNull ? 0 : Convert.ToInt32(dr["comment_advkw"]);
+                int likes = dr["comment_likes"] is DBNull ? 0 : Convert.ToInt32(dr["comment_likes"]);
                 res.Add(new Comment()
                 {
                     CommentID = com_id,
@@ -288,8 +285,7 @@ namespace turizm.Lib.DB
                     TopicID = topic_id,
                     Text = text,
                     Date = parsed_date,
-                    Likes = likes,
-                    AdvertWordsCount = advk
+                    Likes = likes
                 });
             }
 

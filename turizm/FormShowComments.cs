@@ -19,10 +19,13 @@ namespace turizm
     {
         private List<Comment> comments;
         private CommentDatabase db;
+        private ToolTip tooltipmask;
 
         private FormShowComments()
         {
             InitializeComponent();
+            tooltipmask = new ToolTip() { ToolTipIcon = ToolTipIcon.Info, ToolTipTitle = "Совпадающие маски:" };
+
         }
 
         /// <summary>
@@ -43,6 +46,18 @@ namespace turizm
         /// <param name="e"></param>
         private void FormShowComments_Load(object sender, EventArgs e)
         {
+            //сортировка массива комментариев по лайкам и рекламным словам
+            comments.Sort((x, y) =>
+            {
+                int weightX = x.Likes - x.AdvertMasks.Count * 3;
+                int weightY = y.Likes - y.AdvertMasks.Count * 3;
+
+                if (weightX < weightY) return 1;
+                else if (weightX > weightY) return -1;
+                else return 0;
+            });
+
+            //заполнение таблицы
             DataTable dt = new DataTable();
             dt.Columns.Add("Комментарий");
             foreach (Comment comm in this.comments)
@@ -53,7 +68,7 @@ namespace turizm
             }
             dataGridViewComments.DataSource = dt;
             dataGridViewComments.Columns[0].Width = 200;
-            labelTotalComments.Text = "Найдено комментариев: " + comments.Count;
+            labelTotalComments.Text = "Найдено комментариев: " + comments.Count + ", из них с рекламой: " + comments.Count((arg) => { return arg.AdvertMasks.Count > 1; });
         }
 
         /// <summary>
@@ -71,7 +86,16 @@ namespace turizm
                     Comment comm = comments[ind];
                     textBoxCommentText.Text = comm.Text;
                     labelLikes.Text = "Количество лайков: " + comm.Likes.ToString();
-                    labelAdv.Text = "Количество рекламных слов: " + comm.AdvertWordsCount.ToString();
+                    labelAdv.Text = "Количество рекламных слов: " + comm.AdvertMasks.Count.ToString();
+
+                    //заполнение маски
+
+                    string mask_list = "";
+                    foreach (string m in comm.AdvertMasks)
+                        mask_list += m + "\r\n  ";
+                    tooltipmask.SetToolTip(labelAdv, mask_list);
+
+
                     User user = db.GetUser(comm.UserID);
                     labelName.Text = "Пользователь: " + user.FirstName + " " + user.LastName;
                 }
@@ -85,18 +109,16 @@ namespace turizm
         /// <param name="e"></param>
         private void dataGridViewComments_Paint(object sender, PaintEventArgs e)
         {
-            if (dataGridViewComments.RowCount > 0 && dataGridViewComments.ColumnCount > 0 && comments.Count > 0)
+            if (comments.Count == 0)
+                return;
+
+            int i = 0;
+            foreach (DataGridViewRow dr in dataGridViewComments.Rows)
             {
-                for (int i = 0; i < dataGridViewComments.Rows.Count; i++)
-                {
-                    Comment tf = comments[i];
-                    if (tf.AdvertWordsCount > 0)
-                    {
-                        DataGridViewCell cell = dataGridViewComments.Rows[i].Cells[0];
-                        cell.Style = new DataGridViewCellStyle() { BackColor = Color.Yellow };
-                    }
-                    i++;
-                }
+                Comment tf = comments[i];
+                if (tf.AdvertMasks.Count > 1)
+                    dr.Cells[0].Style.BackColor = Color.Yellow;
+                i++;
             }
         }
     }
