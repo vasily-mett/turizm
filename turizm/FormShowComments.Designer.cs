@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormShowComments));
             this.dataGridViewComments = new System.Windows.Forms.DataGridView();
             this.textBoxCommentText = new System.Windows.Forms.TextBox();
             this.labelLikes = new System.Windows.Forms.Label();
@@ -107,6 +108,7 @@
             this.Controls.Add(this.labelLikes);
             this.Controls.Add(this.textBoxCommentText);
             this.Controls.Add(this.dataGridViewComments);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormShowComments";
             this.Text = "Результаты поиска";
             this.Load += new System.EventHandler(this.FormShowComments_Load);

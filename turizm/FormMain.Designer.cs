@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMain));
             this.buttonUpdateDB = new System.Windows.Forms.Button();
             this.listViewTopics = new System.Windows.Forms.ListView();
             this.labelTotalComments = new System.Windows.Forms.Label();
@@ -161,6 +162,7 @@
             this.Controls.Add(this.labelTotalComments);
             this.Controls.Add(this.listViewTopics);
             this.Controls.Add(this.buttonUpdateDB);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormMain";
             this.Text = "Туризм";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FormMain_FormClosed);
