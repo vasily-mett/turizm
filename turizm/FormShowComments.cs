@@ -115,6 +115,8 @@ namespace turizm
             int i = 0;
             foreach (DataGridViewRow dr in dataGridViewComments.Rows)
             {
+                if (i == comments.Count)
+                    continue;
                 Comment tf = comments[i];
                 if (tf.AdvertMasks.Count > 1)
                     dr.Cells[0].Style.BackColor = Color.Yellow;
