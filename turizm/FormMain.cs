@@ -70,11 +70,12 @@ namespace turizm
         /// <param name="e"></param>
         private void buttonFilter_Click(object sender, EventArgs e)
         {
+            //NeuroNetwork web = new NeuroNetwork(db);
+            //web.test();
+
             List<string> find;
             List<string> exclude;
-            
-
-            if (textBoxFind.Text.Trim().Length > 0)
+                        if (textBoxFind.Text.Trim().Length > 0)
                 find = textBoxFind.Text.Trim().ToLower().Replace(" ", "").Split(',').ToList();
             else
                 find = null;
@@ -82,6 +83,7 @@ namespace turizm
                 exclude = textBoxExclude.Text.Trim().ToLower().Replace(" ", "").Split(',').ToList();
             else
                 exclude = null;
+
             db.LoadAdvertKw(options.AdvertKeywordsFileName);
             List<Comment> comments = db.FindComments(find, exclude);
             comments = new CommentPrefilter(db).CountAdvertWords(comments);

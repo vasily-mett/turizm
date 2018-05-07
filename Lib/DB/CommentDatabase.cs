@@ -227,5 +227,30 @@ namespace turizm.Lib.DB
             Comment max = comms.Max();
             return max;
         }
+
+        /// <summary>
+        /// экспорт всех комментариев из БД в заданных текстовый файл
+        /// </summary>
+        /// <param name="v">имя файла, куда сохранить все коментв</param>
+        internal void ExportCommentsText(string v)
+        {
+            List<Comment> comms = FindComments(null, null);
+
+            StreamWriter sw = new StreamWriter(v,false,Encoding.UTF8);
+
+            foreach (Comment c in comms)
+                sw.WriteLine(c.Text.Replace(",","")
+                    .Replace(".","")
+                    .Replace(":","")
+                    .Replace("!","")
+                    .Replace(")", "")
+                    .Replace("(", "")
+                    .Replace(";", "")
+                    .Replace("-", "")
+                    .Replace("*", ""));
+
+            sw.Close();
+            
+        }
     }
 }
