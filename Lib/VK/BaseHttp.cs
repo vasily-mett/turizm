@@ -21,8 +21,8 @@ namespace turizm.Lib.VK
         /// <returns></returns>
         protected string  GetString(string url)
         {
-            if (DateTime.Now - lastReq < TimeSpan.FromMilliseconds(400))
-                Thread.Sleep(200);
+            if (DateTime.Now - lastReq < TimeSpan.FromMilliseconds(300))
+                Thread.Sleep(300);
             try
             {
                 //Выполняем запрос к универсальному коду ресурса (URI).
