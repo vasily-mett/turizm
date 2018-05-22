@@ -48,6 +48,7 @@ namespace turizm.Lib.VK
 
                 //Закрываем поток ответа.
                 response.Close();
+                lastReq = DateTime.Now;
                 return responsereader;
             }
             catch (WebException we) { throw new WebException("Ошибка подключения.\r\n" + url, we); }
