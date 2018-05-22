@@ -7,12 +7,25 @@ using System.Net;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace turizm.Lib.VK
 {
     public class BaseHttp
     {
         DateTime lastReq = DateTime.Now;
+
+        private int delay;
+        private int sleep;
+
+        public BaseHttp()
+        {
+            StreamReader sr = new StreamReader(Application.StartupPath + "\\access_token.txt");
+            sr.ReadLine();
+            delay = int.Parse(sr.ReadLine()); // задержка
+            sleep = int.Parse(sr.ReadLine()); //длина сна
+            sr.Close();
+        }
 
         /// <summary>
         /// Отправка запроса get
@@ -21,8 +34,8 @@ namespace turizm.Lib.VK
         /// <returns></returns>
         protected string  GetString(string url)
         {
-            if (DateTime.Now - lastReq < TimeSpan.FromMilliseconds(300))
-                Thread.Sleep(300);
+            if (DateTime.Now - lastReq < TimeSpan.FromMilliseconds(delay))
+                Thread.Sleep(sleep);
             try
             {
                 //Выполняем запрос к универсальному коду ресурса (URI).
