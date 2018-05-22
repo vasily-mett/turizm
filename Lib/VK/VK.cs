@@ -20,7 +20,7 @@ namespace turizm.Lib.VK
     /// <summary>
     /// оболочка АPI контакта
     /// </summary>
-    public class VK : BaseHttp
+    public class VK : BaseHttp, IVK
     {
         /// <summary>
         /// апи контакта
@@ -31,15 +31,7 @@ namespace turizm.Lib.VK
         private readonly CommentDatabase db;
 
         /// <summary>
-        /// тип автора комментария. Человек, группа
-        /// </summary>
-        public enum CommentAutorType
-        {
-            User, Group
-        }
-
-        /// <summary>
-        /// конструктор с настройками
+        /// Конструктор с настройками
         /// </summary>
         /// <param name="options"></param>
         /// <param name="db"></param>
@@ -55,18 +47,18 @@ namespace turizm.Lib.VK
             {
                 AccessToken = options.AccessToken
             };
-            api.Authorize(par);
+            api.Authorize(par);   //Подключение
         }
 
         /// <summary>
-        /// обновление базы данных комментариев 
+        /// Обновление БД комментариев 
         /// </summary>
         /// <param name="database"></param>
         /// <param name="options"></param>
-        /// <param name="callback"></param>
         public void UpdateDB(CommentDatabase database, Options options, Label labelProgress)
         {
-            /* 1. Добавить недостающие обсуждения
+            /* 
+             * 1. Добавить недостающие обсуждения
              * 2. Пройтись по всем обсуждениям и добавить недостающие комментарии 
              *      а. проверить последний добавленный комментарий (по дате написания комментария) (MAX date WHERE topic_id == t.TopicID)
              *      б. загрузить с сайта все коменты этого обсуждения, начиная с последнего добавленного (по частям)
@@ -77,7 +69,7 @@ namespace turizm.Lib.VK
 
             for (int i = 0; i < topics.Count; i++)
             {
-                Topic t = topics[i];
+                Topic t = topics[i];   //Текущее обсуждение
                 Comment last_comm = database.GetLastComment(t);
                 CommentsResponse response = GetCommentsFrom(t, last_comm, (perc) =>
                 {
@@ -95,7 +87,8 @@ namespace turizm.Lib.VK
         }
 
         /// <summary>
-        /// получить все комментарии в заданном обсуждении, начиная с заданного комментария
+        /// Получить все комментарии в заданном обсуждении, начиная с заданного комментария
+        /// https://vk.com/dev/board.getComments
         /// </summary>
         /// <param name="t">обсуждение</param>
         /// <param name="last_comm">комментарий, с которого надо начать (не включая его)</param>
@@ -117,11 +110,11 @@ namespace turizm.Lib.VK
                 t.GroupID,
                 t.TopicID,
                 start_comment_id,
-                100 //запрашиваем по 100 комментариев
+                100   //Запрашиваем по 100 комментариев
                 );
             JToken json = this.GetJson(url);
 
-            //добавление комментариев
+            //Добавление комментариев
             JToken items = json["response"]["items"];
             foreach (JToken item in items)
             {
@@ -134,7 +127,7 @@ namespace turizm.Lib.VK
                 res.Add(new Comment() { CommentID = comment_id, Likes = likes, Text = text, TopicID = t.TopicID, UserID = from_id, Date = parsed_date });
             }
 
-            //добавление пользователей
+            //Добавление пользователей
             JToken profiles = json["response"]["profiles"];
             foreach (JToken profile in profiles)
             {
@@ -144,26 +137,26 @@ namespace turizm.Lib.VK
                 res.Add(new User() { FirstName = fname, LastName = lname, UserID = id });
             }
 
-            //общее количество комментариев в этом обсуждении
+            //Общее количество комментариев в этом обсуждении
             int total = int.Parse(json["response"]["count"].ToString());
 
-            //сдвиг на сколько комментариев уже передвинулись в этом обсуждении
+            //Сдвиг на сколько комментариев уже передвинулись в этом обсуждении
             int offset = 0;
             if (json["response"]["real_offset"] == null)
                 offset = 0;
             else
                 offset = int.Parse(json["response"]["real_offset"].ToString());
 
-            //вывод прогресса
+            //Вывод прогресса
             callback.Invoke((((double)offset / (double)total) * 100d));
             Application.DoEvents();
 
-            //рекурсивно добавляем остальные комментарии
+            //Рекурсивно добавляем остальные комментарии
             if (total - offset > res.CountComents)
                 res.Add(GetCommentsFrom(t, res.Comments[res.CountComents - 1], callback));
 
-            //если был задан стартовый элемент, то надо удалить, а то он два раза добавляется
-            //да, ненаучно, но что делать)
+            //Если был задан стартовый элемент, то надо удалить, а то он два раза добавляется
+            //да, ненаучно, но что поделать)
             if (last_comm != null)
                 res.RemoveCommentAt(0);
 
@@ -171,25 +164,13 @@ namespace turizm.Lib.VK
         }
 
         /// <summary>
-        /// получение access_token для сессии
+        /// Получение access_token для сессии
         /// </summary>
         /// <returns></returns>
         private string GetToken(ulong applicationID)
         {
             //TODO: Реализовать получение токена как в документации. Сейчас токен прописан в коде - неправильный подход
             return "6d9e2282cf9749603c8f6b4b010f300b0e7ef9a20faff87f592db94d8b8c25c3188ccac5fdbe32cdba9f4";
-
-            string url = string.Format("https://oauth.vk.com/authorize?client_id={3}&display={0}&redirect_uri={1}&response_type=token&v={2}&scope={4}",
-                "page",
-                @"https://oauth.vk.com/blank.html",
-                VkApi.VkApiVersion,
-                options.ApplicationID,
-                "offline"
-                );
-            Process.Start(url);
-
-
-            return "";
         }
     }
 }

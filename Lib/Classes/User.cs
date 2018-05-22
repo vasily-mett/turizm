@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 namespace turizm.Lib.Classes
 {
     /// <summary>
-    /// структура информации о пользователе
+    /// Структура информации о пользователе
     /// </summary>
-    public class User
+    public class User : IUser
     {
         /// <summary>
         /// ID пользователя
@@ -17,17 +17,17 @@ namespace turizm.Lib.Classes
         public long UserID { get; set; }
 
         /// <summary>
-        /// имя
+        /// Имя
         /// </summary>
         public string FirstName { get; set; }
 
         /// <summary>
-        /// фамилия
+        /// Фамилия
         /// </summary>
         public string LastName { get; set; }
 
         /// <summary>
-        /// проверка пользователей на идентичность. Для работы метода List<>.Contains()
+        /// Проверка пользователей на идентичность. Для работы метода List<>.Contains()
         /// </summary>
         /// <param name="obj"></param>
         /// <returns></returns>

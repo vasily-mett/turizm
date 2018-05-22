@@ -9,22 +9,22 @@ using System.Windows.Forms;
 namespace turizm.Lib
 {
     /// <summary>
-    /// настройки приложения
+    /// Настройки приложения
     /// </summary>
-    public class Options
+    public class Options : IOptions
     {
         /// <summary>
-        /// создает объект настроек по умолчанию
+        /// Создает объект настроек по умолчанию
         /// </summary>
         public Options()
         {
-            ApplicationID = 6442889;
+            ApplicationID = 6442889; 
             DatabaseFileName = "Turizm.sqlite";
             AdvertKeywordsFileName = "advert.txt";
             AccessToken = null;
             Topics = new List<string>()
             {
-                //vk.com group_id     topic_id
+                //vk.com group_id      topic_id
                 "https://vk.com/topic-14897324_24801958",
                 "https://vk.com/topic-33445697_25808851",
                 "https://vk.com/topic-40062539_35535029",
@@ -41,32 +41,32 @@ namespace turizm.Lib
         public ulong ApplicationID { get; set; }
 
         /// <summary>
-        /// access token, полученный через браузер или через VKNet
+        /// Access token, полученный через браузер или через VKNet
         /// </summary>
         public string AccessToken { get; set; }
 
         /// <summary>
-        /// список ссылок на обсуждения, которые будут просматриваться при обработке
+        /// Список ссылок на обсуждения, которые будут просматриваться при обработке
         /// </summary>
         public List<string> Topics { get; set; }
 
         /// <summary>
-        /// имя файла базы данных
+        /// Имя файла БД
         /// </summary>
         private string databaseFileName;
 
         /// <summary>
-        /// имя файла базы данных
+        /// Адрес файла базы данных (прописывается весь путь)
         /// </summary>
         public string DatabaseFileName { get { return Application.StartupPath + "\\" + databaseFileName; } set { databaseFileName = Path.GetFileName(value); } }
 
         /// <summary>
-        /// имя файла с рекламными словами
+        /// Имя файла с рекламными словами
         /// </summary>
         private string advertKeywordsFileName;
 
         /// <summary>
-        /// адрес файла с рекламными словами
+        /// Адрес файла с рекламными словами (прописывается весь путь)
         /// </summary>
         public string AdvertKeywordsFileName { get { return Application.StartupPath + "\\" + advertKeywordsFileName; } set { advertKeywordsFileName = Path.GetFileName(value); } }
     }

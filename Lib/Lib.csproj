@@ -100,19 +100,27 @@
     <Compile Include="Classes\AdvWord.cs" />
     <Compile Include="Classes\Comment.cs" />
     <Compile Include="Classes\CommentsRequest.cs" />
+    <Compile Include="Classes\IComment.cs" />
+    <Compile Include="Classes\ITopic.cs" />
+    <Compile Include="Classes\IUser.cs" />
     <Compile Include="Classes\Topic.cs" />
     <Compile Include="Classes\User.cs" />
     <Compile Include="DB\BaseDB.cs" />
     <Compile Include="DB\CommentDatabase.cs" />
+    <Compile Include="DB\ICommentDatabase.cs" />
     <Compile Include="Filter\CommentPrefilter.cs" />
+    <Compile Include="Filter\ICommentPrefilter.cs" />
+    <Compile Include="IOptions.cs" />
     <Compile Include="Neuro\NWeb.cs" />
     <Compile Include="Options.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VK\BaseHttp.cs" />
+    <Compile Include="VK\IVK.cs" />
     <Compile Include="VK\VK.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="ClassDiagram1.cd" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

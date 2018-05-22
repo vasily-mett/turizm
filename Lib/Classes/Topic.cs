@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 namespace turizm.Lib.Classes
 {
     /// <summary>
-    /// структура информации об обсуждении
+    /// Структура информации об обсуждении
     /// </summary>
-    public class Topic
+    public class Topic : ITopic
     {
         /// <summary>
         /// ID обсуждения
@@ -17,7 +17,7 @@ namespace turizm.Lib.Classes
         public long TopicID { get; set; }
 
         /// <summary>
-        /// название
+        /// Название
         /// </summary>
         public string Name { get; set; }
 

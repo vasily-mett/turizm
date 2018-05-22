@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 namespace turizm.Lib.Classes
 {
     /// <summary>
-    /// структура информации о комментарии
+    /// Структура информации о комментарии
     /// </summary>
-    public class Comment : IComparable
+    public class Comment : IComment
     {
         public Comment()
         {
@@ -27,17 +27,17 @@ namespace turizm.Lib.Classes
         public long UserID { get; set; }
 
         /// <summary>
-        /// текст комментария
+        /// Текст комментария
         /// </summary>
         public string Text { get; set; }
 
         /// <summary>
-        /// дата написания комментария
+        /// Дата написания комментария
         /// </summary>
         public DateTime Date { get; set; }
 
         /// <summary>
-        /// количество лайков у комментария
+        /// Количество лайков у комментария
         /// </summary>
         public int Likes { get; set; }
 
@@ -47,12 +47,12 @@ namespace turizm.Lib.Classes
         public long CommentID { get; set; }
 
         /// <summary>
-        /// количество рекламных масок в комментарии
+        /// Количество рекламных масок в комментарии
         /// </summary>
         public List<string> AdvertMasks { get; set; }
 
         /// <summary>
-        /// сравнение для поиска максимального элемента
+        /// Сравнение для поиска максимального элемента
         /// </summary>
         /// <param name="obj"></param>
         /// <returns></returns>

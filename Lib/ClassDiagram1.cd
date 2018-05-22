@@ -1,0 +1,93 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="turizm.Lib.Classes.AdvWord" Collapsed="true">
+    <Position X="8" Y="4.5" Width="1.25" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAABAAIAgAACAAAAAAAAAAAAAAACAAAAAAAAAAA=</HashCode>
+      <FileName>Classes\AdvWord.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="System.Object" Collapsed="true">
+    <Position X="12.25" Y="0.75" Width="1.25" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="turizm.Lib.Classes.Comment" Collapsed="true">
+    <Position X="10.75" Y="2.25" Width="1.25" />
+    <TypeIdentifier>
+      <HashCode>ABAAAAAAAAAAAAQAAAAAAAgAAAAAAgAjAAAACAAAAAA=</HashCode>
+      <FileName>Classes\Comment.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="turizm.Lib.Classes.CommentsResponse" Collapsed="true">
+    <Position X="9.75" Y="3" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAIAACAAAAAAAAAAAAAIAAAAEAAAAAAAAAAAAAAAIAA=</HashCode>
+      <FileName>Classes\CommentsRequest.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="turizm.Lib.Classes.Topic" Collapsed="true">
+    <Position X="12.25" Y="2.25" Width="1.25" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAAAAAAAAAAQAAAAAAgAAAAAAAAAAAAA=</HashCode>
+      <FileName>Classes\Topic.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="turizm.Lib.Classes.User" Collapsed="true">
+    <Position X="13.75" Y="2.25" Width="1.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAAAAAAAAgAAAAAgAAAAAAIAAAAAAAAAAAAg=</HashCode>
+      <FileName>Classes\User.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="turizm.Lib.DB.BaseDB" Collapsed="true">
+    <Position X="15.25" Y="3.75" Width="1.25" />
+    <InheritanceLine Type="System.Object" FixedToPoint="true">
+      <Path>
+        <Point X="12.875" Y="1.312" />
+        <Point X="12.875" Y="1.687" />
+        <Point X="15.979" Y="1.687" />
+        <Point X="15.979" Y="3.75" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAJAAAAAACAAAMgAAgABAEQABAIAAAAAAQIAA4DAAAA=</HashCode>
+      <FileName>DB\BaseDB.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="turizm.Lib.Filter.CommentPrefilter" Collapsed="true">
+    <Position X="8.75" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAABIAAAAQAAAAAAAAAAAAAAAAAAAAAGAUAQAAACA=</HashCode>
+      <FileName>Filter\CommentPrefilter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="turizm.Lib.Options" Collapsed="true">
+    <Position X="14.5" Y="3" Width="1.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAFAIAAAAAAAAACEEAAAAAAAAAAACAAAAA=</HashCode>
+      <FileName>Options.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="turizm.Lib.VK.BaseHttp" Collapsed="true">
+    <Position X="16" Y="4.5" Width="1.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAABAAAAAAgAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>VK\BaseHttp.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="turizm.Lib.DB.CommentDatabase" Collapsed="true">
+    <Position X="12.75" Y="3.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAABAAAAAABEAAABkAAAAIgAAEAAUAAEAAAAABAAAA=</HashCode>
+      <FileName>DB\CommentDatabase.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="turizm.Lib.VK.VK" Collapsed="true">
+    <Position X="14" Y="4.5" Width="1.25" />
+    <TypeIdentifier>
+      <HashCode>AEAAAQAAAAAQAAAAAAAAAAAAAAAAAAAAACAAAAABBBA=</HashCode>
+      <FileName>VK\VK.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

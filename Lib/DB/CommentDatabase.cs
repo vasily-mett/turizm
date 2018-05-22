@@ -11,12 +11,12 @@ using VkNet.Enums;
 namespace turizm.Lib.DB
 {
     /// <summary>
-    /// база данных комментариев
+    /// БД комментариев
     /// </summary>
     public class CommentDatabase : BaseDB
     {
         /// <summary>
-        /// общее количество комментариев в базе данных
+        /// Общее количество комментариев в БД
         /// </summary>
         public long TotalComments
         {
@@ -27,12 +27,12 @@ namespace turizm.Lib.DB
         }
 
         /// <summary>
-        /// общее количество пользователей в БД
+        /// Общее количество пользователей в БД
         /// </summary>
         public long TotalUsers { get { return Count(tb_users); } }
 
         /// <summary>
-        /// открывает базу данных, если файла не существует, то создает пустой
+        /// Открывает БД, если файла не существует, то создает пустой
         /// </summary>
         /// <param name="options"></param>
         public CommentDatabase(Options options)
@@ -43,7 +43,7 @@ namespace turizm.Lib.DB
         }
 
         /// <summary>
-        /// обновляет базу данных, добавляет недостающие обсуждеия
+        /// Обновляет базу данных, добавляет недостающие обсуждеия
         /// </summary>
         /// <param name="links">ссылки на обсуждения</param>
         internal void LoadTopics(List<Topic> topics)
@@ -53,12 +53,12 @@ namespace turizm.Lib.DB
         }
 
         /// <summary>
-        /// загрузить список рекламных слов
+        /// Загрузить список рекламных слов
         /// </summary>
         /// <param name="advertKeywordsFileName">адрес файла с рекламными словами</param>
         public void LoadAdvertKw(string advertKeywordsFileName)
         {
-            //чтение файла
+            //Чтение файла
             StreamReader sr = new StreamReader(advertKeywordsFileName);
             List<AdvWord> lines = new List<AdvWord>();
             while (!sr.EndOfStream)
@@ -68,7 +68,7 @@ namespace turizm.Lib.DB
             }
             sr.Close();
 
-            //заполнение БД
+            //Заполнение БД
             this.ClearTable(tb_advert);
             foreach (AdvWord wd in lines)
                 this.AddObject(wd);
@@ -76,7 +76,7 @@ namespace turizm.Lib.DB
 
 
         /// <summary>
-        /// добавление строки в таблицу обсуждений 
+        /// Добавление строки в таблицу обсуждений 
         /// </summary>
         /// <param name="t"></param>
         private void AddTopic(Topic t)
@@ -97,7 +97,7 @@ namespace turizm.Lib.DB
         }
 
         /// <summary>
-        /// проверка существует ли заданное обсуждение в БД
+        /// Проверка существует ли заданное обсуждение в БД
         /// </summary>
         /// <param name="topicID"></param>
         /// <returns></returns>
@@ -109,7 +109,7 @@ namespace turizm.Lib.DB
         }
 
         /// <summary>
-        /// получить информацию о пользователе по заданному ID
+        /// Получить информацию о пользователе по заданному ID
         /// </summary>
         /// <param name="userID">ID пользователя</param>
         /// <returns></returns>
@@ -123,7 +123,7 @@ namespace turizm.Lib.DB
         }
 
         /// <summary>
-        /// преобразование текстовых ссылок в массив объектов Topic
+        /// Преобразование текстовых ссылок в массив объектов Topic
         /// </summary>
         /// <param name="links"></param>
         /// <returns></returns>
@@ -144,16 +144,13 @@ namespace turizm.Lib.DB
         }
 
         /// <summary>
-        /// поиск комментариев в базе данных
+        /// Поиск комментариев в БД
         /// </summary>
         /// <param name="find">слова, которые надо найти</param>
         /// <param name="exclude">слова, которые не должны попадаться в результате</param>
         /// <returns>список найденных комментариев</returns>
         public List<Comment> FindComments(List<string> find, List<string> exclude)
         {
-            //find = new List<string>() { "да","вар" };
-            //exclude = new List<string>() { "нет", "барселон","80" };
-
             if (find == null)
                 find = new List<string>();
             if (exclude == null)
@@ -166,20 +163,20 @@ namespace turizm.Lib.DB
             //начало команды всегда одинаковое
             string command = "SELECT * FROM ";
 
-            if (need_inc) //если есть, то искать, то добавляем блок включения слов
+            if (need_inc)   //Если есть, то искать, то добавляем блок включения слов
             {
                 command += " ( ";
                 command += @" SELECT * FROM '" + tb_comments + "' WHERE ";
                 foreach (string fstr in find)
                     command += @" comment_text LIKE '%" + fstr + "%' OR ";
 
-                command = command.Substring(0, command.Length - "OR ".Length); //удаляем последний OR
-                command += ") "; //закрываем блок
+                command = command.Substring(0, command.Length - "OR ".Length);   //Удаляем последний OR
+                command += ") ";   //Закрываем блок
             }
             else
-                command += " '" + tb_comments + "'"; //если нет, то берем всю таблицу
+                command += " '" + tb_comments + "'";   //Если нет, то берем всю таблицу
 
-            if (need_exc) //если есть слова для исключения, то добавляем исключения
+            if (need_exc)   //Если есть слова для исключения, то добавляем исключения
             {
                 command += " WHERE ";
                 foreach (string estr in exclude)
@@ -187,14 +184,14 @@ namespace turizm.Lib.DB
 
                 command = command.Substring(0, command.Length - "AND ".Length);
             }
-            command += ";"; // в любом случае, завершаем команду ';'
+            command += ";";   //В любом случае, завершаем команду ';'
 
             List<Comment> comms = ExecuteCommentReader(command);
             return comms;
         }
 
         /// <summary>
-        /// добавление пользователей в БД
+        /// Добавление пользователей в БД
         /// </summary>
         /// <param name="users"></param>
         internal void AddUsers(List<User> users)
@@ -205,7 +202,7 @@ namespace turizm.Lib.DB
         }
 
         /// <summary>
-        /// добавляет комментарии в базу данных
+        /// Добавляет комментарии в БД
         /// </summary>
         /// <param name="new_comments"></param>
         internal void AddComments(List<Comment> new_comments)

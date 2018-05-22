@@ -8,18 +8,18 @@ using System.Threading.Tasks;
 namespace turizm.Lib.Classes
 {
     /// <summary>
-    /// структура рекламного слова в таблице tb_advert
+    /// Структура рекламного слова в таблице tb_advert
     /// </summary>
     public class AdvWord
     {
         private string word;
         /// <summary>
-        /// слово
+        /// Слово
         /// </summary>
         public string Word { get { return word; } set { word = value; hash = GetHash(value); } }
 
         /// <summary>
-        /// возвращает хэш-сумму строки
+        /// Возвращает хэш-сумму строки
         /// </summary>
         /// <param name="value">строка</param>
         /// <returns></returns>
@@ -27,7 +27,7 @@ namespace turizm.Lib.Classes
         {
             byte[] originalBytes;
             byte[] encodedBytes;
-            MD5 md5;
+            MD5 md5;   //Контрольная сумма по алгоритму MD5 (чтобы не добавлялись одинаковые слова)
             md5 = new MD5CryptoServiceProvider();
             originalBytes = Encoding.Default.GetBytes(value);
             encodedBytes = md5.ComputeHash(originalBytes);
@@ -42,11 +42,9 @@ namespace turizm.Lib.Classes
         private string hash;
 
         /// <summary>
-        /// хэш-сумма слова
+        /// Хэш-сумма слова
         /// </summary>
         public string Hash { get { return hash; } }
-
-
 
     }
 }

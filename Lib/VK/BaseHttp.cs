@@ -12,7 +12,7 @@ namespace turizm.Lib.VK
     public class BaseHttp
     {
         /// <summary>
-        /// отправка запроса get
+        /// Отправка запроса get
         /// </summary>
         /// <param name="url">url запроса</param>
         /// <returns></returns>
@@ -23,7 +23,7 @@ namespace turizm.Lib.VK
                 //Выполняем запрос к универсальному коду ресурса (URI).
                 HttpWebRequest request =
                     (HttpWebRequest)WebRequest.Create(url);
-                request.UserAgent = "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.71 Safari/537.36";
+                request.UserAgent = "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.71 Safari/537.36";   //Чтобы он считал, что я-браузер
                 request.ContentType = "application/xml";
                 request.Headers[HttpRequestHeader.AcceptLanguage] = "ru - RU,ru; q = 0.8,en - US; q = 0.6,en; q = 0.4";
 
@@ -50,7 +50,6 @@ namespace turizm.Lib.VK
 
         protected JToken GetJson(string url)
         {
-
             string json = GetString(url);
             return  JToken.Parse(json);
         }

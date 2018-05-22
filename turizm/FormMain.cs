@@ -12,7 +12,6 @@ using turizm.Lib;
 using turizm.Lib.Classes;
 using turizm.Lib.DB;
 using turizm.Lib.Filter;
-using turizm.Lib.Neuro;
 using turizm.Lib.VK;
 using VkNet;
 using VkNet.Enums.Filters;
@@ -23,7 +22,7 @@ namespace turizm
     public partial class FormMain : Form
     {
         Options options;
-        CommentDatabase db;
+        CommentDatabase db; 
         VK vk;
 
         /// <summary>

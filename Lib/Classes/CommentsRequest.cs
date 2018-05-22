@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 namespace turizm.Lib.Classes
 {
     /// <summary>
-    /// ответ сервера при запросе комментариев. (список комментов и список пользователей)
+    /// Ответ сервера при запросе комментариев (список комментов и список пользователей)
     /// </summary>
     public class CommentsResponse
     {
         /// <summary>
-        /// инициализация списков
+        /// Инициализация списков
         /// </summary>
         public CommentsResponse()
         {
@@ -21,7 +21,7 @@ namespace turizm.Lib.Classes
         }
 
         /// <summary>
-        /// список комментариев
+        /// Список комментариев
         /// </summary>
         public List<Comment> Comments { get; set; }
 
@@ -31,7 +31,7 @@ namespace turizm.Lib.Classes
         public int CountComents { get { return Comments.Count; } }
 
         /// <summary>
-        /// список пользователей
+        /// Список пользователей
         /// </summary>
         public List<User> Users { get; set; }
 
@@ -46,7 +46,7 @@ namespace turizm.Lib.Classes
         }
 
         /// <summary>
-        /// добавление одного комментария
+        /// Добавление одного комментария
         /// </summary>
         /// <param name="comment">объект - комментарий</param>
         internal void Add(Comment comment)
@@ -55,7 +55,7 @@ namespace turizm.Lib.Classes
         }
 
         /// <summary>
-        /// удаление комментария на заданной позиции
+        /// Удаление комментария на заданной позиции
         /// </summary>
         /// <param name="v">номер в списке комментариев</param>
         internal void RemoveCommentAt(int v)

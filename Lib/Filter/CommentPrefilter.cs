@@ -12,16 +12,16 @@ using VkNet.Enums;
 namespace turizm.Lib.Filter
 {
     /// <summary>
-    /// обработка комментариев до занесения в БД (отсев спама, коротких  коментов)
+    /// Обработка комментариев до занесения в БД (отсев спама, коротких комментов)
     /// </summary>
-    public class CommentPrefilter
+    public class CommentPrefilter : ICommentPrefilter
     {
         private readonly CommentDatabase db;
-        private readonly Regex RegExpressionLink = new Regex(@"w*(https?:\/\/)?([\w\.]+)\.([a-z]{2,6}\.?)(\/[\w\.]*)*\/?w*");
+        private readonly Regex RegExpressionLink = new Regex(@"w*(https?:\/\/)?([\w\.]+)\.([a-z]{2,6}\.?)(\/[\w\.]*)*\/?w*"); //регулярное выражение для ссылки
         List<AdvWord> words;
 
         /// <summary>
-        /// создает новый экземпляр фильтра комментариев
+        /// Создает новый экземпляр фильтра комментариев
         /// </summary>
         /// <param name="db">база данных с добавленными пользователями</param>
         public CommentPrefilter(CommentDatabase db)
@@ -31,7 +31,7 @@ namespace turizm.Lib.Filter
         }
 
         /// <summary>
-        /// отсеивает комментарии для сохранения в БД и записывает количество рекламных слов в тексте комментария
+        /// Отсеивает комментарии для сохранения в БД и записывает количество рекламных слов в тексте комментария
         /// </summary>
         /// <param name="new_comments">скачанные комментарии</param>
         /// <returns>комментарии, которые надо добавлять в БД</returns>
@@ -45,13 +45,13 @@ namespace turizm.Lib.Filter
         }
 
         /// <summary>
-        /// подготовка комментария перед добавлением в БД (удаление ссылок на страницы ВК, посчет рекламных слов в тексте)
+        /// Подготовка комментария перед добавлением в БД (удаление ссылок на страницы ВК, посчет рекламных слов в тексте)
         /// </summary>
         /// <param name="comm">комментарий</param>
         /// <returns></returns>
         private Comment PrepareComment(Comment comm)
         {
-            //удаление ссылок вк (ответы, упоминания)
+            //Удаление ссылок вк (ответы, упоминания)
             string text = comm.Text;
             text = Regex.Replace(text, @"\[[^\)]+\]", "");
             text = text.TrimStart(new char[2] { ',', ' ' });
@@ -60,7 +60,7 @@ namespace turizm.Lib.Filter
         }
 
         /// <summary>
-        /// для каждого комментария в списке записывает список рекламных масок, под которые подходит текст
+        /// Для каждого комментария в списке записывает список рекламных масок, под которые подходит текст
         /// </summary>
         /// <param name="comments"></param>
         /// <returns></returns>
@@ -72,7 +72,7 @@ namespace turizm.Lib.Filter
         }
 
         /// <summary>
-        /// возвращает список рекламных масок в заданном тексте
+        /// Возвращает список рекламных масок в заданном тексте
         /// </summary>
         /// <param name="text">текст</param>
         /// <returns></returns>
@@ -80,52 +80,50 @@ namespace turizm.Lib.Filter
         {
             List<string> res = new List<string>();
             foreach (AdvWord kw in words)
-                //if (checkMask(text,kw.Word))
                 if (new Regex(kw.Word).IsMatch(text))
                     res.Add(kw.Word);
             return res;
-
         }
 
         /// <summary>
-        /// проверяет подходит комментарий для добавления в БД или нет
+        /// Проверяет подходит комментарий для добавления в БД или нет
         /// </summary>
         /// <param name="comm"></param>
         /// <returns></returns>
         private bool IsCommentMatch(Comment comm)
         {
-            /* 1) Всё, что с ссылками - реклама.
+            /* 
+             * 1) Всё, что с ссылками - реклама.
              * 2) Всё, что не от имени пользователя, убираем.
              * 3) Всё, что меньше пяти слов, отсеиваем. 
              * 4) Всё, что вопрос, убираем.
              * 5) Количество символов > 30
              */
 
-            //длина текста комментария
+            //Длина текста комментария
             if (comm.Text.Length < 30)
                 return false;
 
-            //содержит знак "?"
+            //Содержит знак "?"
             if (comm.Text.Contains('?'))
                 return false;
 
-            //количество слов
+            //Количество слов
             if (comm.Text.Split(' ').Length < 5)
                 return false;
 
-            //содержит ссылки
+            //Содержит ссылки
             if (ContainsLink(comm))
                 return false;
 
-            //тип автора - пользователь
+            //Тип автора - пользователь
             if (CommentFrom(comm) != VkObjectType.User)
                 return false;
-
             return true;
         }
 
         /// <summary>
-        /// проверяет автора комментария и возвращает тип
+        /// Проверяет автора комментария и возвращает тип
         /// </summary>
         /// <param name="comm">проверяемый комментарий</param>
         /// <returns></returns>
@@ -136,7 +134,7 @@ namespace turizm.Lib.Filter
         }
 
         /// <summary>
-        /// проверяет текст комментария на содержание ссылок
+        /// Проверяет текст комментария на содержание ссылок
         /// </summary>
         /// <param name="comm">проверяемый комментарий</param>
         /// <returns></returns>

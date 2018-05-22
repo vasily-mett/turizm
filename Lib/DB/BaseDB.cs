@@ -10,7 +10,7 @@ using turizm.Lib.Classes;
 namespace turizm.Lib.DB
 {
     /// <summary>
-    /// базовый класс взаимодействия с БД
+    /// Базовый класс взаимодействия с БД
     /// </summary>
     public class BaseDB
     {
@@ -24,7 +24,7 @@ namespace turizm.Lib.DB
         public const string tb_advert = "tb_advert";
 
         /// <summary>
-        /// подсчет количества строк в заданной таблице
+        /// Подсчет количества строк в заданной таблице
         /// </summary>
         /// <param name="tb"></param>
         /// <returns></returns>
@@ -34,7 +34,7 @@ namespace turizm.Lib.DB
         }
 
         /// <summary>
-        /// возвращает количество строк в заданной таблице и с заданным условием
+        /// Возвращает количество строк в заданной таблице и с заданным условием
         /// </summary>
         /// <param name="tb_users">таблица</param>
         /// <param name="condition">условие "WHERE ..."</param>
@@ -65,7 +65,7 @@ namespace turizm.Lib.DB
         }
 
         /// <summary>
-        /// открытие базы данных. Если бд не существует, то создаёт новую
+        /// Открытие БД. Если БД не существует, то создаёт новую
         /// </summary>
         protected void OpenDB()
         {
@@ -73,21 +73,18 @@ namespace turizm.Lib.DB
 
             if (!File.Exists(this.FileName))
                 CreateDB();
-
         }
 
         /// <summary>
-        /// закрывает базу данных
+        /// Закрывает БД
         /// </summary>
         public void Close()
         {
             connection.Close();
         }
 
-
-
         /// <summary>
-        /// создание пустой базы данных
+        /// Создание пустой БД
         /// </summary>
         /// <param name="databaseFileName"></param>
         protected void CreateDB()
@@ -131,7 +128,7 @@ namespace turizm.Lib.DB
         }
 
         /// <summary>
-        /// добавление новой строки в базу 
+        /// Добавление новой строки в базу 
         /// </summary>
         /// <param name="lat">широта</param>
         /// <param name="lon">долгота</param>
@@ -142,7 +139,7 @@ namespace turizm.Lib.DB
             string com = "";
             if (obj is Comment)
             {
-                //добавление комментария в таблицу
+                //Добавление комментария в таблицу
                 Comment comment = obj as Comment;
                 comment.Text = comment.Text.Replace("'", "");
                 long date = (int)(comment.Date - new DateTime(1970, 1, 1)).TotalSeconds;
@@ -156,7 +153,7 @@ namespace turizm.Lib.DB
             }
             else if (obj is Topic)
             {
-                //добавление обсуждения в таблицу
+                //Добавление обсуждения в таблицу
                 Topic topic = obj as Topic;
                 com = string.Format("INSERT INTO '" + tb_topics + @"' ('topic_id','group_id','name') VALUES ('{0}','{1}','{2}');",
                     topic.TopicID,
@@ -166,7 +163,7 @@ namespace turizm.Lib.DB
             }
             else if (obj is AdvWord)
             {
-                //добавление рекламного слова в таблицу
+                //Добавление рекламного слова в таблицу
                 AdvWord word = obj as AdvWord;
                 com = string.Format("INSERT INTO '" + tb_advert + @"' ('word','hash') VALUES ('{0}','{1}');",
                     word.Word,
@@ -177,7 +174,7 @@ namespace turizm.Lib.DB
         }
 
         /// <summary>
-        /// добавление многих комментариев в БД
+        /// Добавление многих комментариев в БД
         /// </summary>
         /// <param name="comments"></param>
         protected void Add(List<Comment> comments)
@@ -206,14 +203,13 @@ namespace turizm.Lib.DB
         }
 
         /// <summary>
-        /// добавление пользователей в БД
+        /// Добавление пользователей в БД
         /// </summary>
         /// <param name="users">список пользователей для добавления</param>
         protected void Add(List<User> users_param)
         {
-            //подготовка списка (убираем повторяющихся пользователей)
+            //Подготовка списка (убираем повторяющихся пользователей)
             List<long> ids = new List<long>();
-            //List<User> uss = ExecuteUserReader("SELECT user_id FROM " + tb_users); //если так, то быстрее, но ошибка в методе из-за невыбранных полей
             List<User> uss = ExecuteUserReader("SELECT * FROM " + tb_users);
             List<User> users = new List<User>();
             foreach (User us in uss)
@@ -228,7 +224,7 @@ namespace turizm.Lib.DB
             if (users.Count == 0)
                 return;
 
-            //добавление в БД
+            //Добавление в БД
             SQLiteTransaction trans = this.connection.BeginTransaction();
             for (int i = 0; i < users.Count; i++)
             {
@@ -244,7 +240,7 @@ namespace turizm.Lib.DB
         }
 
         /// <summary>
-        /// выполнение запроса без результата
+        /// Выполнение запроса без результата
         /// </summary>
         /// <param name="query">команда SQL</param>
         /// <returns></returns>
@@ -257,7 +253,7 @@ namespace turizm.Lib.DB
         }
 
         /// <summary>
-        /// выполнение запроса с результатом в виде списка комментариев
+        /// Выполнение запроса с результатом в виде списка комментариев
         /// </summary>
         /// <param name="com">команда SQL</param>
         /// <returns></returns>
@@ -294,13 +290,12 @@ namespace turizm.Lib.DB
         }
 
         /// <summary>
-        /// выполнение запроса с результатом в виде списка пользователей
+        /// Выполнение запроса с результатом в виде списка пользователей
         /// </summary>
         /// <param name="com">команда SQL</param>
         /// <returns></returns>
         protected List<User> ExecuteUserReader(string com)
         {
-
             SQLiteCommand cmd = connection.CreateCommand();
             cmd.CommandText = com;
             SQLiteDataReader dr = cmd.ExecuteReader();
@@ -320,13 +315,11 @@ namespace turizm.Lib.DB
                     UserID = user_id
                 });
             }
-
             return res;
-
         }
 
         /// <summary>
-        /// выполнение запроса с результатом в виде списка обсуждений
+        /// Выполнение запроса с результатом в виде списка обсуждений
         /// </summary> 
         /// <param name="com">команда SQL</param>
         /// <returns></returns>
@@ -350,12 +343,11 @@ namespace turizm.Lib.DB
                     Name = nm
                 });
             }
-
             return res;
         }
 
         /// <summary>
-        /// выполнение запроса с результатом в виде списка рекламных слов
+        /// Выполнение запроса с результатом в виде списка рекламных слов
         /// </summary>
         /// <param name="com">команда SQL</param>
         /// <returns></returns>
@@ -377,12 +369,11 @@ namespace turizm.Lib.DB
                     Word = word
                 });
             }
-
             return res;
         }
 
         /// <summary>
-        /// выполнить запрос с одним результатом
+        /// Выполнить запрос с одним результатом
         /// </summary>
         /// <param name="com">команда SQL</param>
         /// <returns></returns>
@@ -390,7 +381,7 @@ namespace turizm.Lib.DB
         {
             bool need_close = false;
 
-            //открываем соединение, если надо
+            //Открываем соединение, если надо
             if (connection.State != System.Data.ConnectionState.Open)
             {
                 connection.Open();
@@ -407,15 +398,14 @@ namespace turizm.Lib.DB
                 res = resA.ToString();
             }
 
-            //если открывали соединение, то надо закрыть
+            //Если открывали соединение, то надо закрыть
             if (need_close)
                 connection.Close();
-
             return res;
         }
 
         /// <summary>
-        /// очистка заданной таблицы
+        /// Очистка заданной таблицы
         /// </summary>
         /// <param name="table">имя таблицы</param>
         protected void ClearTable(string table)
@@ -424,6 +414,5 @@ namespace turizm.Lib.DB
             cmd.CommandText = "DELETE FROM " + table;
             cmd.ExecuteNonQuery();
         }
-
     }
 }
