@@ -14,6 +14,7 @@ using VkNet.Utils;
 using Newtonsoft.Json.Linq;
 using turizm.Lib.Filter;
 using System.Windows.Forms;
+using System.IO;
 
 namespace turizm.Lib.VK
 {
@@ -106,16 +107,23 @@ namespace turizm.Lib.VK
 
             CommentsResponse res = new CommentsResponse();
 
-            string url = string.Format("https://api.vk.com/method/board.getComments?group_id={0}&topic_id={1}&need_likes=1{2}&count={3}&extended=1&v=5.52",
+            string url = string.Format("https://api.vk.com/method/board.getComments?group_id={0}&topic_id={1}&need_likes=1{2}&count={3}&extended=1&v=5.52&access_token={4}",
                 t.GroupID,
                 t.TopicID,
                 start_comment_id,
-                100   //Запрашиваем по 100 комментариев
-                );
+                100,   //Запрашиваем по 100 комментариев
+                options.AccessToken);
             JToken json = this.GetJson(url);
 
             //Добавление комментариев
-            JToken items = json["response"]["items"];
+            JToken resp = json["response"];
+            if (resp == null)
+            {
+                MessageBox.Show(((JObject)json).ToString(Newtonsoft.Json.Formatting.Indented), "Загрузка комментариев", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                throw new Exception("");
+            }
+
+            JToken items = resp["items"];
             foreach (JToken item in items)
             {
                 long comment_id = long.Parse(item["id"].ToString());
@@ -170,7 +178,12 @@ namespace turizm.Lib.VK
         private string GetToken(ulong applicationID)
         {
             //TODO: Реализовать получение токена как в документации. Сейчас токен прописан в коде - неправильный подход
-            return "6d9e2282cf9749603c8f6b4b010f300b0e7ef9a20faff87f592db94d8b8c25c3188ccac5fdbe32cdba9f4";
+            //return "edc0c8e7306b4da0f9f40f370b14fb256a99eefbb549e1eb75f3dbd7026a021c42029223a5f00ef9a0382";
+
+            StreamReader sr = new StreamReader(Application.StartupPath + "\\access_token.txt");
+            string line = sr.ReadLine();
+            sr.Close();
+            return line;
         }
     }
 }

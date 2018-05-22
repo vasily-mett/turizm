@@ -5,12 +5,15 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace turizm.Lib.VK
 {
     public class BaseHttp
     {
+        DateTime lastReq = DateTime.Now;
+
         /// <summary>
         /// Отправка запроса get
         /// </summary>
@@ -18,6 +21,8 @@ namespace turizm.Lib.VK
         /// <returns></returns>
         protected string  GetString(string url)
         {
+            if (DateTime.Now - lastReq < TimeSpan.FromMilliseconds(400))
+                Thread.Sleep(200);
             try
             {
                 //Выполняем запрос к универсальному коду ресурса (URI).
