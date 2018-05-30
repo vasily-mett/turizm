@@ -68,22 +68,29 @@ namespace turizm.Lib.VK
             List<Topic> topics = database.ParseTopicLinks(options.Topics);
             database.LoadTopics(topics);
 
-            for (int i = 0; i < topics.Count; i++)
+            try
             {
-                Topic t = topics[i];   //Текущее обсуждение
-                Comment last_comm = database.GetLastComment(t);
-                CommentsResponse response = GetCommentsFrom(t, last_comm, (perc) =>
+                for (int i = 0; i < topics.Count; i++)
                 {
-                    string status = "Обработка обсуждения " + (i + 1) + "/" + topics.Count + ", завершено " + perc.ToString("0.0") + "%";
-                    labelProgress.Text = status;
-                    Application.DoEvents();
-                });
+                    Topic t = topics[i];   //Текущее обсуждение
+                    Comment last_comm = database.GetLastComment(t);
+                    CommentsResponse response = GetCommentsFrom(t, last_comm, (perc) =>
+                    {
+                        string status = "Обработка обсуждения " + (i + 1) + "/" + topics.Count + ", завершено " + perc.ToString("0.0") + "%";
+                        labelProgress.Text = status;
+                        Application.DoEvents();
+                    });
 
-                labelProgress.Text = "Обработка обсуждения " + (i + 1) + "/" + topics.Count + ", обработка результатов"; Application.DoEvents();
-                database.AddUsers(response.Users);
+                    labelProgress.Text = "Обработка обсуждения " + (i + 1) + "/" + topics.Count + ", обработка результатов"; Application.DoEvents();
+                    database.AddUsers(response.Users);
 
-                List<Comment> filtered_comments = prefilter.Prefilter(response.Comments);
-                database.AddComments(filtered_comments);
+                    List<Comment> filtered_comments = prefilter.Prefilter(response.Comments);
+                    database.AddComments(filtered_comments);
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("Возникла ошибка во время загрузки комментариев", "Загрузка комментариев", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
             }
         }
 

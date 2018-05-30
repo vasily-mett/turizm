@@ -18,21 +18,17 @@ namespace turizm.Lib
         /// </summary>
         public Options()
         {
-            ApplicationID = 6442889; 
+            ApplicationID = 6442889;
             DatabaseFileName = "Turizm.sqlite";
             AdvertKeywordsFileName = "advert.txt";
             AccessToken = null;
-            Topics = new List<string>()
-            {
-                //vk.com group_id      topic_id
-                "https://vk.com/topic-14897324_24801958",
-                "https://vk.com/topic-33445697_25808851",
-                "https://vk.com/topic-40062539_35535029",
-                "https://vk.com/topic-60394803_29506343",
-                "https://vk.com/topic-42365455_29275795",
-                "https://vk.com/topic-140629566_35003076",
-                "https://vk.com/topic-61009220_29225653"
-            };
+
+            //загрузка ссылок на обсуждения из файла
+            Topics = new List<string>();
+            StreamReader sr = new StreamReader(Application.StartupPath + "\\topics.txt");
+            while (!sr.EndOfStream)
+                Topics.Add(sr.ReadLine());
+            sr.Close();
         }
 
         /// <summary>
